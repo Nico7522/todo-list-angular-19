@@ -1,0 +1,53 @@
+<div class="m-auto text-white">
+    <div class="py-10 bg-default rounded-md shadow-xl w-96 m-auto mt-10">
+        <h2 class=" text-4xl text-center">Choisissez un rôle</h2>
+        <div class="flex gap-10 justify-center mt-5">
+            <div class="inline-flex items-center">
+                <label class="relative flex items-center cursor-pointer" for="admin">
+                    <input name="role" type="radio" value="admin" (change)="onRoleChange('admin')"
+                        class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                        id="admin">
+                    <span
+                        class="absolute bg-white w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    </span>
+                </label>
+                <label class="ml-2 text-white cursor-pointer text-sm" for="admin">Admin</label>
+            </div>
+
+            <div class="inline-flex items-center">
+                <label class="relative flex items-center cursor-pointer" for="user">
+                    <input name="role" type="radio" value="user" (change)="onRoleChange('user')"
+                        class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                        id="user">
+                    <span
+                        class="absolute bg-white w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    </span>
+                </label>
+                <label class="ml-2 text-white cursor-pointer text-sm" for="user">User</label>
+            </div>
+        </div>
+
+    </div>
+
+    <div
+        class="{{role() ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}} transition ease-in-out delay-150 py-10 bg-select w-96 m-auto mt-10 rounded-md shadow-xl  mb-5">
+        @if (role()) {
+        <h4 class="text-4xl text-center mb-5">Liste des utilisateurs</h4>
+
+        <div class="mx-10">
+            <input #username (input)="onUsernameChange(username.value)"
+                class="w-full bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+                placeholder="John Doe ...">
+        </div>
+
+        }
+    </div>
+    <div
+        class="{{username() !== '' ? 'opacity-100': 'opacity-0'}} transition ease-in-out delay-150 w-96 m-auto flex items-center">
+        @if (username() !== '') {
+        <button (click)="onStart()"
+            class="m-auto w-52 bg-default py-2 px-3 hover:bg-onHover rounded-md shadow-xl transition ease-in duration-150 hover:-translate-y-1 ">Commencer</button>
+        }
+
+    </div>
+</div>

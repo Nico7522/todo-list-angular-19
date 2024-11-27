@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  @font-face {
+    font-family: "lato";
+    src: url(/assets/fonts/Lato-Regular.ttf) format("truetype");
+  }
+}
+body {
+  background: rgb(17, 17, 17);
+  color: white;
+}

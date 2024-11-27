@@ -1,0 +1,4 @@
+<span [class.text-green-500]="priority() === priorityEnum.LOW"
+    [class.text-orange-500]="priority() === priorityEnum.MEDIUM" [class.text-red-500]="priority() === priorityEnum.HIGH"
+    class="ml-2">{{priority() || 0 |
+    priority}}</span>

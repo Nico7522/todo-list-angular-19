@@ -1,0 +1,10 @@
+@if (task$ | async; as task ) {
+<div class="p-5">
+    <h1 class="text-white text-5xl mb-5">{{task.title}}</h1>
+    <img src="{{task.imgUrl}}" class="w-96 mb-5" alt="">
+    <p class="inline text-xl">Tâche de priorité : </p> <app-priority [priority]="task.priority" />
+    <p [class.text-green-500]="task.completed" [class.text-red-500]="!task.completed" class="text-xl mt-5">
+        {{task.completed ?
+        'Terminée': 'En cours'}}</p>
+</div>
+}

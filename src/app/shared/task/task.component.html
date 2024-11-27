@@ -1,0 +1,28 @@
+<div class="rounded-lg border-2 shadow-xl border-black text-white w-60 h-96 flex flex-col">
+    <img class="" src="/assets/{{task().imgUrl}}" alt="Image de la tâche">
+    <h3 class="text-2xl p-2 flex-1">{{task().title}}</h3>
+    <div class="flex ml-2">
+        <p>Priorité : </p>
+        <app-priority [priority]="task().priority" />
+    </div>
+    <h4 [class.text-green-500]="task().completed" [class.text-red-500]="!task().completed" class="p-2 align-bottom">
+        {{task().completed ?
+        'Terminée' :
+        'En cours'}}
+    </h4>
+    <div class="mb-2">
+
+        <button routerLink="/task/{{task().id}}"
+            class="rounded-md bg-green-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+            type="button">
+            Détails
+        </button>
+
+        <button
+            class="rounded-md bg-blue-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+            type="button">
+            Editer
+        </button>
+    </div>
+
+</div>
