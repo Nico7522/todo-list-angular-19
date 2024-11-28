@@ -1,4 +1,12 @@
-import { BehaviorSubject, filter, map, Observable, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+} from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
 import { completed, images, titles, users } from '../../services/data';
@@ -9,6 +17,24 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  override delete(id: number): Observable<any> {
+    let newTasksList: Task[] = [];
+    let isSuccess = false;
+    this.taskList$
+      .pipe(
+        map((tasks) => {
+          let length = tasks.length;
+          tasks = tasks.filter((task) => task.id !== id);
+          newTasksList = [...tasks];
+          if (newTasksList.length < length) isSuccess = true;
+          return tasks;
+        })
+      )
+      .pipe(take(1))
+      .subscribe();
+    this.taskList$.next(newTasksList);
+    return of();
+  }
   override getTasksByUserId(id: number): Observable<Task[]> {
     return this.taskList$.pipe(
       filter((_) => id !== 0),
