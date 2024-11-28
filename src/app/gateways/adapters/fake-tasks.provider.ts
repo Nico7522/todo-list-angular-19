@@ -17,7 +17,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
-  override delete(id: number): Observable<any> {
+  override delete(id: number): Observable<boolean> {
     let newTasksList: Task[] = [];
     let isSuccess = false;
     this.taskList$
@@ -33,7 +33,7 @@ export class FakeTasksProvider extends TasksProvider {
       .pipe(take(1))
       .subscribe();
     this.taskList$.next(newTasksList);
-    return of();
+    return of(isSuccess);
   }
   override getTasksByUserId(id: number): Observable<Task[]> {
     return this.taskList$.pipe(
