@@ -18,6 +18,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
+    path: 'my-tasks',
+    renderMode: RenderMode.Server,
+  },
+  {
     path: 'task/:id',
     renderMode: RenderMode.Prerender,
     async getPrerenderParams() {

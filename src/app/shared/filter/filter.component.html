@@ -1,0 +1,7 @@
+<button data-ripple-dark="true" (click)="filterByStatus(true)" class="py-1 px-3 rounded-xl bg-green-500">Terminée
+    ?</button>
+<button (click)="filterByStatus(false)" class="py-1 px-3 rounded-xl bg-red-500">En cours ?</button>
+<button (click)="filterByStatus(null)" class="py-1 px-3 rounded-xl bg-blue-500">Toutes</button>
+<input #searchInput (input)="filterByTitle(searchInput.value)"
+    class="bg-default focus:ring-2 focus:ring-gray-800 focus:outline-none text-white  rounded-lg p-1" type="search"
+    placeholder="Ranger la chambre ...">

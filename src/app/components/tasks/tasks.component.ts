@@ -1,12 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { TodoComponent } from '../../shared/task/task.component';
+import { TaskComponent } from '../../shared/task/task.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FilterComponent } from '../../shared/filter/filter.component';
 
 @Component({
   selector: 'app-tasks',
-  imports: [TodoComponent],
-  // providers: [FakeTasksProvider],
+  imports: [TaskComponent, FilterComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
 })

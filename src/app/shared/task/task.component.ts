@@ -3,14 +3,15 @@ import { Task } from '../../models/task.model';
 import { RouterModule } from '@angular/router';
 import { Priority } from '../../enums/priority.enum';
 import { PriorityComponent } from '../priority/priority.component';
+import { EditComponent } from '../edit/edit.component';
 
 @Component({
   selector: 'app-task',
-  imports: [RouterModule, PriorityComponent],
+  imports: [RouterModule, PriorityComponent, EditComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss',
 })
-export class TodoComponent {
+export class TaskComponent {
   task = input.required<Task>();
 
   priorityColorClass = computed(() =>

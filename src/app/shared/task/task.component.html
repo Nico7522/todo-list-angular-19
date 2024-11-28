@@ -10,19 +10,14 @@
         'Terminée' :
         'En cours'}}
     </h4>
-    <div class="mb-2">
+    <div class="mb-2 flex">
 
         <button routerLink="/task/{{task().id}}"
-            class="rounded-md bg-green-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+            class="rounded-md bg-default py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-onHover active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
             type="button">
             Détails
         </button>
-
-        <button
-            class="rounded-md bg-blue-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
-            type="button">
-            Editer
-        </button>
+        <app-edit [task]="task()" />
     </div>
 
 </div>

@@ -9,6 +9,15 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  override getTasksByUserId(id: number): Observable<Task[]> {
+    return this.taskList$.pipe(
+      filter((_) => id !== 0),
+      map((tasks) => {
+        tasks = tasks.filter((task) => task.userId === id);
+        return tasks;
+      })
+    );
+  }
   taskList$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   getRandomTasks() {
     let todos: Task[] = [];

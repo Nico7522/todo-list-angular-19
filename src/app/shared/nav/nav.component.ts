@@ -12,12 +12,7 @@ export class NavComponent {
   #usersProvider = inject(FakeUsersProvider);
   #router = inject(Router);
   canShowMenu = this.#usersProvider.showMenu;
-  selectedUser = this.#usersProvider.username;
-  hideMenu() {
-    this.#usersProvider.setUsername('');
-    this.#usersProvider.setRole(null);
-    this.#usersProvider.setShowMenu(false);
-  }
+  currentUser = this.#usersProvider.currentUser;
 
   onDisconnect() {
     this.#usersProvider.logout();

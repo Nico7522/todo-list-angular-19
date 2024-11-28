@@ -2,18 +2,18 @@
     <h1 class="text-start font-bold text-white text-4xl p-10"><img class="inline" src="favicon.ico" alt="">
         Angular v19 Test
     </h1>
-    @if (canShowMenu()) {
+    @if (currentUser()) {
     <ul class="flex items-center justify-center gap-5 text-white">
-        <li class=""><a routerLink="/" (click)="hideMenu()">Home</a></li>
+        <li class=""><a routerLink="/" (click)="onDisconnect()">Home</a></li>
         <li><a routerLink="/tasks">Liste des tâches</a></li>
-        <li><a routerLink="/tasks">Mes tâches</a></li>
+        <li><a routerLink="/my-tasks">Mes tâches</a></li>
 
     </ul>
 
     }
-    @if (canShowMenu()) {
+    @if (currentUser()) {
     <div class="mr-2 m-auto flex items-center justify-center">
-        <h4 class="text-white ">Bonjour {{selectedUser()}}</h4>
+        <h4 class="text-white ">Bonjour {{currentUser()?.username}}</h4>
         <button (click)="onDisconnect()"
             class="rounded-md bg-default py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-onHover focus:shadow-none active:bg-onHover hover:bg-onHover active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
             type="button">
@@ -22,4 +22,5 @@
     </div>
 
     }
+
 </nav>

@@ -8,8 +8,15 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
+  #currentUser = signal<User | null>(null);
+  currentUser = this.#currentUser.asReadonly();
+
+  override login(user: User): void {
+    this.#currentUser.set(user);
+  }
   override logout(): void {
     this.#username.set('');
+    this.#currentUser.set(null);
     this.#role.set(null);
     this.#showMenu.set(false);
   }
@@ -19,6 +26,7 @@ export class FakeUsersProvider extends UsersProvider {
       username: username,
     };
     users.push(user);
+    this.login(user);
   }
   override getUser(id: number): Observable<User | null> {
     const user = users.find((u) => u.id === id);

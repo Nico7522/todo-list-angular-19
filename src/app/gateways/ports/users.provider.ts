@@ -5,5 +5,6 @@ export abstract class UsersProvider {
   abstract getUsers(): Observable<User[]>;
   abstract getUser(id: number): Observable<User | null>;
   abstract createUser(username: string): void;
+  abstract login(user: User): void;
   abstract logout(): void;
 }
