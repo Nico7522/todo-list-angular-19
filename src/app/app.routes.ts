@@ -4,6 +4,7 @@ import { TaskDetailsComponent } from './components/task-details/task-details.com
 import { TasksComponent } from './components/tasks/tasks.component';
 import { canNavigateGuard } from './guards/can-navigate.guard';
 import { MyTasksComponent } from './components/my-tasks/my-tasks.component';
+import { TaskEditComponent } from './components/task-edit/task-edit.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,5 +19,10 @@ export const routes: Routes = [
     path: 'my-tasks',
     component: MyTasksComponent,
     canActivate: [canNavigateGuard],
+  },
+  {
+    path: 'task/:id/edit',
+    component: TaskEditComponent,
+    // canActivate: [canNavigateGuard],
   },
 ];

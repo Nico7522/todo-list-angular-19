@@ -9,8 +9,8 @@ import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
   styleUrl: './nav.component.scss',
 })
 export class NavComponent {
-  #usersProvider = inject(FakeUsersProvider);
-  #router = inject(Router);
+  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #router = inject(Router);
   canShowMenu = this.#usersProvider.showMenu;
   currentUser = this.#usersProvider.currentUser;
 

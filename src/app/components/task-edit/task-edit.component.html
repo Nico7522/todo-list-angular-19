@@ -1,0 +1,58 @@
+<form (ngSubmit)="onSubmit()"
+    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center"
+    [formGroup]="editForm">
+    <div class="w-full max-w-sm min-w-[200px]">
+        <label class="mb-2" for="title">Titre</label>
+        <input formControlName="title" id="title"
+            class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            placeholder="Titre ...">
+    </div>
+    <div class="w-full max-w-sm min-w-[200px] mt-5">
+        <div class="relative">
+            <label class="mb-2" for="priorities">Priorité</label>
+            <select id="priorities" formControlName="priorities"
+                class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer">
+                <option class="text-black" value="2">Haute</option>
+                <option class="text-black" value="1">Moyenne</option>
+                <option class="text-black" value="0">Basse</option>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2"
+                    stroke="currentColor" class="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                </svg>
+            </select>
+        </div>
+
+    </div>
+    <div class="flex gap-10 justify-center mt-5">
+        <div class="inline-flex items-center">
+            <label class="relative flex items-center cursor-pointer" for="finish">
+                <input name="status" type="radio" value="true" formControlName="status"
+                    class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                    id="finish">
+                <span
+                    class="absolute bg-white w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                </span>
+            </label>
+            <label class="ml-2 text-white cursor-pointer text-sm" for="finish">Terminée</label>
+        </div>
+
+        <div class="inline-flex items-center">
+            <label class="relative flex items-center cursor-pointer" for="inProgress">
+                <input name="status" type="radio" value='false' formControlName="status"
+                    class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                    id="inProgress">
+                <span
+                    class="absolute bg-white w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                </span>
+            </label>
+            <label class="ml-2 text-white cursor-pointer text-sm" for="inProgress">En cours</label>
+        </div>
+    </div>
+    <button
+        class="mt-5 rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-slate-800 transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="submit">
+        Éditer
+    </button>
+
+</form>

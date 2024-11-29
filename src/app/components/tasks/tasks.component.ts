@@ -11,7 +11,7 @@ import { FilterComponent } from '../../shared/filter/filter.component';
   styleUrl: './tasks.component.scss',
 })
 export class TasksComponent {
-  #tasksProvider = inject(FakeTasksProvider);
+  readonly #tasksProvider = inject(FakeTasksProvider);
   search = signal('');
   startIndex = signal(0);
   endIndex = signal(21);
@@ -39,7 +39,5 @@ export class TasksComponent {
     this.#tasksProvider.filterByStatus(completed);
   }
 
-  ngOnInit() {
-    this.#tasksProvider.getRandomTasks();
-  }
+  ngOnInit() {}
 }

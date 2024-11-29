@@ -17,6 +17,29 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  override edit(id: number, task: Partial<Task>): Observable<boolean> {
+    let newTasksList: Task[] = [];
+    let isSuccess = false;
+    this.taskList$
+      .pipe(
+        map((tasks) => {
+          let taskToEdit = tasks.find((task) => task.id === id);
+          if (taskToEdit) {
+            taskToEdit = { ...taskToEdit, ...task };
+            tasks = tasks.filter((task) => task.id !== id);
+            tasks.push(taskToEdit);
+            newTasksList = [...tasks];
+            isSuccess = true;
+          }
+        })
+      )
+      .pipe(take(1))
+      .subscribe();
+
+    if (isSuccess) this.taskList$.next(newTasksList);
+
+    return of(isSuccess);
+  }
   override delete(id: number): Observable<boolean> {
     let newTasksList: Task[] = [];
     let isSuccess = false;

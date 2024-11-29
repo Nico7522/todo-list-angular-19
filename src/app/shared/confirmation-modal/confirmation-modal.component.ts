@@ -9,11 +9,19 @@ import { Component, output } from '@angular/core';
 export class ConfirmationModalComponent {
   cancel = output();
   confirm = output();
+  body = document.querySelector('body') as HTMLBodyElement;
+
   onCancel() {
     this.cancel.emit();
+    this.body.classList.remove('overflow-hidden');
   }
 
   onConfirm() {
     this.confirm.emit();
+    this.body.classList.remove('overflow-hidden');
+  }
+
+  ngOnInit() {
+    this.body.classList.add('overflow-hidden');
   }
 }

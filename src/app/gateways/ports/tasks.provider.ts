@@ -6,4 +6,5 @@ export abstract class TasksProvider {
   abstract getTask(id: string): Observable<Task | null>;
   abstract getTasksByUserId(id: number): Observable<Task[]>;
   abstract delete(id: number): Observable<boolean>;
+  abstract edit(id: number, task: Partial<Task>): Observable<boolean>;
 }

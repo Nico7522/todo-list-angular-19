@@ -15,8 +15,8 @@ import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
   styleUrl: './task-details.component.scss',
 })
 export class TaskDetailsComponent {
-  #tasksProvider = inject(FakeTasksProvider);
-  #usersProvider = inject(FakeUsersProvider);
+  readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #usersProvider = inject(FakeUsersProvider);
   readonly id = input<string>('');
   priorityColorClass = signal('');
   task$ = toObservable(this.id).pipe(

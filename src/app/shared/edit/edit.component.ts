@@ -1,14 +1,13 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Task } from '../../models/task.model';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-edit',
-  imports: [ConfirmationModalComponent],
+  imports: [ConfirmationModalComponent, RouterModule],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss',
 })
@@ -26,6 +25,8 @@ export class EditComponent {
   onDelete() {
     this.showModal.set(true);
   }
+
+  onEdit() {}
 
   closeModal() {
     this.showModal.set(false);
