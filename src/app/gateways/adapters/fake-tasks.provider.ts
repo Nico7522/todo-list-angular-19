@@ -6,12 +6,15 @@ import {
   of,
   switchMap,
   take,
+  throwError,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
 import { completed, images, titles, users } from '../../services/data';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Injectable, signal } from '@angular/core';
+import { error } from 'node:console';
+import { CustomError } from '../../models/custom-error.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,15 +22,13 @@ import { Injectable, signal } from '@angular/core';
 export class FakeTasksProvider extends TasksProvider {
   override edit(id: number, task: Partial<Task>): Observable<boolean> {
     let newTasksList: Task[] = [];
-    let isSuccess = false;
+    let isSuccess: boolean = false;
     this.taskList$
       .pipe(
         map((tasks) => {
-          let taskToEdit = tasks.find((task) => task.id === id);
-          if (taskToEdit) {
-            taskToEdit = { ...taskToEdit, ...task };
-            tasks = tasks.filter((task) => task.id !== id);
-            tasks.push(taskToEdit);
+          let index = tasks.findIndex((t) => t.id === id);
+          if (index !== -1) {
+            tasks[index] = { ...tasks[index], ...task };
             newTasksList = [...tasks];
             isSuccess = true;
           }
@@ -35,10 +36,12 @@ export class FakeTasksProvider extends TasksProvider {
       )
       .pipe(take(1))
       .subscribe();
-
-    if (isSuccess) this.taskList$.next(newTasksList);
-
-    return of(isSuccess);
+    if (isSuccess) {
+      this.taskList$.next(newTasksList);
+      return of(true);
+    } else {
+      throw new CustomError('Task not updated', { status: 400 });
+    }
   }
   override delete(id: number): Observable<boolean> {
     let newTasksList: Task[] = [];
@@ -55,8 +58,12 @@ export class FakeTasksProvider extends TasksProvider {
       )
       .pipe(take(1))
       .subscribe();
-    this.taskList$.next(newTasksList);
-    return of(isSuccess);
+    if (isSuccess) {
+      this.taskList$.next(newTasksList);
+      return of(true);
+    } else {
+      throw new CustomError('Task not deleted', { status: 400 });
+    }
   }
   override getTasksByUserId(id: number): Observable<Task[]> {
     return this.taskList$.pipe(
@@ -85,12 +92,17 @@ export class FakeTasksProvider extends TasksProvider {
     }
     this.taskList$.next(todos);
   }
-  override getTask(id: string): Observable<Task | null> {
+  override getTask(id: string): Observable<Task> {
     return this.taskList$.pipe(
       filter(() => id !== ''),
       map((tasks) => {
         let task = tasks.find((t) => t.id.toString() === id);
-        return task ? task : null;
+        if (task) return task;
+        else {
+          throw new CustomError('Task not found', {
+            status: 400,
+          });
+        }
       })
     );
   }

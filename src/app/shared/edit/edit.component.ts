@@ -4,6 +4,7 @@ import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
+import { catchError, EMPTY, take } from 'rxjs';
 
 @Component({
   selector: 'app-edit',
@@ -18,7 +19,6 @@ export class EditComponent {
   task = input.required<Task>();
 
   showModal = signal(false);
-
   onMyTaskPage = input<boolean>(this.#router.url === '/my-tasks');
   currentUser = this.#usersProvider.currentUser;
 
@@ -34,6 +34,14 @@ export class EditComponent {
 
   confirmAction() {
     this.showModal.set(false);
-    this.#tasksProvider.delete(this.task().id).subscribe();
+    this.#tasksProvider
+      .delete(this.task().id)
+      .pipe(
+        take(1),
+        catchError((err) => {
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
 }

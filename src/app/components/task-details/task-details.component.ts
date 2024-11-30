@@ -2,7 +2,15 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { AsyncPipe } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, map, of, shareReplay, switchMap } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  filter,
+  map,
+  of,
+  shareReplay,
+  switchMap,
+} from 'rxjs';
 import { PriorityPipe } from '../../pipes/priority.pipe';
 import { Priority } from '../../enums/priority.enum';
 import { PriorityComponent } from '../../shared/priority/priority.component';
@@ -21,7 +29,11 @@ export class TaskDetailsComponent {
   priorityColorClass = signal('');
   task$ = toObservable(this.id).pipe(
     switchMap((id) => {
-      return this.#tasksProvider.getTask(id);
+      return this.#tasksProvider.getTask(id).pipe(
+        catchError((err) => {
+          return EMPTY;
+        })
+      );
     }),
     shareReplay()
   );
