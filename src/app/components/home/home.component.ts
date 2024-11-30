@@ -5,6 +5,7 @@ import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 
 @Component({
   selector: 'app-home',
+  imports: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

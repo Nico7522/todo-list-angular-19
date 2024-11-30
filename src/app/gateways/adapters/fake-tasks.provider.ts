@@ -3,68 +3,52 @@ import {
   filter,
   map,
   Observable,
-  of,
+  Subject,
   switchMap,
   take,
-  throwError,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
 import { completed, images, titles, users } from '../../services/data';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Injectable, signal } from '@angular/core';
-import { error } from 'node:console';
 import { CustomError } from '../../models/custom-error.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  text$: Subject<number> = new Subject<number>();
+
   override edit(id: number, task: Partial<Task>): Observable<boolean> {
     let newTasksList: Task[] = [];
-    let isSuccess: boolean = false;
-    this.taskList$
-      .pipe(
-        map((tasks) => {
-          let index = tasks.findIndex((t) => t.id === id);
-          if (index !== -1) {
-            tasks[index] = { ...tasks[index], ...task };
-            newTasksList = [...tasks];
-            isSuccess = true;
-          }
-        })
-      )
-      .pipe(take(1))
-      .subscribe();
-    if (isSuccess) {
-      this.taskList$.next(newTasksList);
-      return of(true);
-    } else {
-      throw new CustomError('Task not updated', { status: 400 });
-    }
+    return this.taskList$.pipe(
+      map((tasks) => {
+        let index = tasks.findIndex((t) => t.id === id);
+        if (index !== -1) {
+          tasks[index] = { ...tasks[index], ...task };
+          newTasksList = [...tasks];
+          return true;
+        } else throw new CustomError('Task not updated', { status: 400 });
+      })
+    );
   }
   override delete(id: number): Observable<boolean> {
-    let newTasksList: Task[] = [];
-    let isSuccess = false;
-    this.taskList$
-      .pipe(
-        map((tasks) => {
-          let length = tasks.length;
-          tasks = tasks.filter((task) => task.id !== id);
-          newTasksList = [...tasks];
-          if (newTasksList.length < length) isSuccess = true;
-          return tasks;
-        })
-      )
-      .pipe(take(1))
-      .subscribe();
-    if (isSuccess) {
-      this.taskList$.next(newTasksList);
-      return of(true);
-    } else {
-      throw new CustomError('Task not deleted', { status: 400 });
-    }
+    return this.taskList$.pipe(
+      take(1),
+      map((tasks) => {
+        const initialLength = tasks.length;
+        const newTasksList = tasks.filter((task) => task.id !== id);
+        if (newTasksList.length < initialLength) {
+          this.taskList$.next(newTasksList);
+          return true;
+        } else {
+          throw new CustomError('Task not deleted', { status: 400 });
+        }
+      })
+    );
   }
+
   override getTasksByUserId(id: number): Observable<Task[]> {
     return this.taskList$.pipe(
       filter((_) => id !== 0),
@@ -100,7 +84,7 @@ export class FakeTasksProvider extends TasksProvider {
         if (task) return task;
         else {
           throw new CustomError('Task not found', {
-            status: 400,
+            status: 404,
           });
         }
       })

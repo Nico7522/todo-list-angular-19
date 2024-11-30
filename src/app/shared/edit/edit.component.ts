@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { catchError, EMPTY, take } from 'rxjs';
+import { Response } from '../../models/response.model';
 
 @Component({
   selector: 'app-edit',
@@ -17,7 +18,7 @@ export class EditComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #router = inject(Router);
   task = input.required<Task>();
-
+  response = signal<Response>('loading');
   showModal = signal(false);
   onMyTaskPage = input<boolean>(this.#router.url === '/my-tasks');
   currentUser = this.#usersProvider.currentUser;
@@ -38,10 +39,12 @@ export class EditComponent {
       .delete(this.task().id)
       .pipe(
         take(1),
-        catchError((err) => {
+        catchError(() => {
+          this.response.set('error');
           return EMPTY;
         })
       )
-      .subscribe();
+      .pipe(take(1))
+      .subscribe((r) => this.response.set('success'));
   }
 }

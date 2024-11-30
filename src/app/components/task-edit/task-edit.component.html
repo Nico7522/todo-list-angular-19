@@ -55,7 +55,9 @@
         Éditer
     </button>
 
-    @if (isTaskUpdated()) {
-    <span class="text-center text-green-500">Tâche éditer avec succès, vous allez être redirigé ...</span>
+    @if (response() === "success") {
+    <span class="text-center text-green-500">Tâche éditée avec succès, vous allez être redirigé ...</span>
+    } @else if(response() === "error") {
+    <span class="text-center text-red-500">Une erreur s'est produite, la tâche n'a pas pu être éditée ...</span>
     }
 </form>

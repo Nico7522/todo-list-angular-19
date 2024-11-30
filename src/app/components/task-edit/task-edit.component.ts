@@ -16,6 +16,7 @@ import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { Priority } from '../../enums/priority.enum';
 import { Task } from '../../models/task.model';
 import { Router } from '@angular/router';
+import { Response } from '../../models/response.model';
 
 @Component({
   selector: 'app-task-edit',
@@ -29,7 +30,7 @@ export class TaskEditComponent {
   readonly #router = inject(Router);
   id = input.required<string>();
   taskId$ = toObservable(this.id);
-  isTaskUpdated = signal(false);
+  response = signal<Response>('loading');
   task = toSignal(
     this.taskId$.pipe(
       switchMap((id) => {
@@ -56,11 +57,13 @@ export class TaskEditComponent {
       .pipe(
         take(1),
         catchError((err) => {
+          this.response.set('error');
+
           return EMPTY;
         })
       )
       .subscribe((response) => {
-        this.isTaskUpdated.set(true);
+        this.response.set('success');
         setTimeout(() => {
           if (response) this.#router.navigate(['/task', this.id()]);
         }, 2000);
