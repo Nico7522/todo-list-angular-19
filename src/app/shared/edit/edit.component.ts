@@ -4,18 +4,21 @@ import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { catchError, EMPTY, take } from 'rxjs';
+import { catchError, EMPTY, startWith, take } from 'rxjs';
 import { Response } from '../../models/response.model';
+import { MessageComponent } from '../message/message.component';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-edit',
-  imports: [ConfirmationModalComponent, RouterModule],
+  imports: [ConfirmationModalComponent, RouterModule, MessageComponent],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss',
 })
 export class EditComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
   task = input.required<Task>();
   response = signal<Response>('loading');
@@ -27,8 +30,6 @@ export class EditComponent {
     this.showModal.set(true);
   }
 
-  onEdit() {}
-
   closeModal() {
     this.showModal.set(false);
   }
@@ -38,13 +39,17 @@ export class EditComponent {
     this.#tasksProvider
       .delete(this.task().id)
       .pipe(
-        take(1),
         catchError(() => {
-          this.response.set('error');
+          this.#messageService.showMessage('Une erreur est survenue.', 'error');
           return EMPTY;
         })
       )
-      .pipe(take(1))
-      .subscribe((r) => this.response.set('success'));
+      .subscribe({
+        next: () =>
+          this.#messageService.showMessage(
+            'La tâche a été supprimée avec succès.',
+            'success'
+          ),
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Router } from '@angular/router';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
@@ -33,5 +33,10 @@ export class HomeComponent {
     this.#usersProvider.setShowMenu(true);
     this.#tasksProvider.getRandomTasks();
     this.#router.navigate(['/tasks']);
+  }
+
+  showMessage = signal(false);
+  show() {
+    this.showMessage.set(!this.showMessage());
   }
 }

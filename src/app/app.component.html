@@ -1,2 +1,5 @@
 <app-nav />
+@if (message().response) {
+<app-message [response]="message().response" [message]="message().message" />
+}
 <router-outlet />

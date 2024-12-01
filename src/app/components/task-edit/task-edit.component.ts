@@ -1,22 +1,13 @@
 import { Component, inject, Input, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  catchError,
-  EMPTY,
-  map,
-  shareReplay,
-  Subject,
-  switchMap,
-  take,
-  tap,
-  timeout,
-} from 'rxjs';
+import { catchError, EMPTY, map, switchMap, take } from 'rxjs';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { Priority } from '../../enums/priority.enum';
 import { Task } from '../../models/task.model';
 import { Router } from '@angular/router';
 import { Response } from '../../models/response.model';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-task-edit',
@@ -27,6 +18,7 @@ import { Response } from '../../models/response.model';
 export class TaskEditComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #formBuilder = inject(FormBuilder);
+  readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
   id = input.required<string>();
   taskId$ = toObservable(this.id);
@@ -57,13 +49,16 @@ export class TaskEditComponent {
       .pipe(
         take(1),
         catchError((err) => {
-          this.response.set('error');
+          this.#messageService.showMessage('Une erreur est survenue.', 'error');
 
           return EMPTY;
         })
       )
       .subscribe((response) => {
-        this.response.set('success');
+        this.#messageService.showMessage(
+          'La tâche éditée avec succès.',
+          'success'
+        );
         setTimeout(() => {
           if (response) this.#router.navigate(['/task', this.id()]);
         }, 2000);
