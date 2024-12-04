@@ -18,6 +18,21 @@ import { CustomError } from '../../models/custom-error.model';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  override create(task: Task): Observable<boolean> {
+    return this.taskList$.pipe(
+      take(1),
+      map((tasks) => {
+        const previousLength = tasks.length;
+        let newTaskList = [...tasks, { ...task, id: tasks.length + 1 }];
+        if (previousLength < newTaskList.length) {
+          this.taskList$.next(newTaskList);
+          return true;
+        } else {
+          throw new CustomError('Task not created', { status: 400 });
+        }
+      })
+    );
+  }
   text$: Subject<number> = new Subject<number>();
 
   override edit(id: number, task: Partial<Task>): Observable<boolean> {

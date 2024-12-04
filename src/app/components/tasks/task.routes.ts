@@ -1,4 +1,3 @@
-import { canNavigateGuard } from '../../guards/can-navigate.guard';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { MyTasksComponent } from './my-tasks/my-tasks.component';
 import { TaskDetailsComponent } from './task-details/task-details.component';
