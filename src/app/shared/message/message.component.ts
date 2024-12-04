@@ -19,11 +19,15 @@ export class MessageComponent {
   message = input.required<string>();
   response = input<'success' | 'error'>();
   canShowMessage = signal(false);
-  destoyComponent = this.#messageService.destroyComponent;
+  messages = this.#messageService.messages;
   ngOnInit() {
     setTimeout(() => {
       this.canShowMessage.set(true);
     }, 100);
+
+    // setTimeout(() => {
+    //   this.#messageService.hideMessage();
+    // }, 3000);
   }
 
   hideMessage() {

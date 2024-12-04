@@ -1,5 +1,11 @@
 <app-nav />
-@if (message().response) {
-<app-message [response]="message().response" [message]="message().message" />
+@if (messages().length > 0) {
+<div class="absolute top-1 left-1/2 transform -translate-x-1/2">
+    @for (msg of messages(); track $index) {
+    <app-message [response]="msg.response" [message]="msg.message" />
+
+    }
+</div>
+
 }
 <router-outlet />

@@ -4,14 +4,13 @@ import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { catchError, EMPTY, startWith, take } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { Response } from '../../models/response.model';
-import { MessageComponent } from '../message/message.component';
 import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-edit',
-  imports: [ConfirmationModalComponent, RouterModule, MessageComponent],
+  imports: [ConfirmationModalComponent, RouterModule],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.scss',
 })
@@ -23,7 +22,7 @@ export class EditComponent {
   task = input.required<Task>();
   response = signal<Response>('loading');
   showModal = signal(false);
-  onMyTaskPage = input<boolean>(this.#router.url === '/my-tasks');
+  onMyTaskPage = input<boolean>(this.#router.url === '/task/my-tasks');
   currentUser = this.#usersProvider.currentUser;
 
   onDelete() {

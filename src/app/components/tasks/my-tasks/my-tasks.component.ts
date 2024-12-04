@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
+import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
+import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { TaskComponent } from '../../shared/task/task.component';
+import { TaskComponent } from '../../../shared/task/task.component';
 
 @Component({
   selector: 'app-my-tasks',

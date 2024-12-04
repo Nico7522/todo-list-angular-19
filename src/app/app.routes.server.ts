@@ -12,13 +12,20 @@ export const serverRoutes: ServerRoute[] = [
     path: 'home',
     renderMode: RenderMode.Prerender,
   },
-
   {
-    path: 'tasks',
+    path: 'task',
     renderMode: RenderMode.Server,
   },
   {
-    path: 'my-tasks',
+    path: 'task/list',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'task/my-tasks',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'task/create',
     renderMode: RenderMode.Server,
   },
   {

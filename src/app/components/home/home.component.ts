@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -32,7 +32,7 @@ export class HomeComponent {
     this.#usersProvider.createUser(this.username());
     this.#usersProvider.setShowMenu(true);
     this.#tasksProvider.getRandomTasks();
-    this.#router.navigate(['/tasks']);
+    this.#router.navigate(['/task/list']);
   }
 
   showMessage = signal(false);

@@ -2,12 +2,12 @@ import { Component, inject, Input, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, EMPTY, map, switchMap, take } from 'rxjs';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { Priority } from '../../enums/priority.enum';
-import { Task } from '../../models/task.model';
 import { Router } from '@angular/router';
-import { Response } from '../../models/response.model';
-import { MessageService } from '../../services/message.service';
+import { MessageService } from '../../../services/message.service';
+import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
+import { Task } from '../../../models/task.model';
+import { Priority } from '../../../enums/priority.enum';
+import { Response } from '../../../models/response.model';
 
 @Component({
   selector: 'app-task-edit',

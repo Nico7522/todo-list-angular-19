@@ -5,8 +5,10 @@
     @if (currentUser()) {
     <ul class="flex items-center justify-center gap-5 text-white">
         <li class=""><a routerLink="/" (click)="onDisconnect()">Home</a></li>
-        <li><a routerLink="/tasks">Liste des tâches</a></li>
-        <li><a routerLink="/my-tasks">Mes tâches</a></li>
+        <li><a routerLink="/task/list">Liste des tâches</a></li>
+        <li><a routerLink="/task/my-tasks">Mes tâches</a></li>
+        <li><a routerLink="/task/create">Ajouter une tâche</a></li>
+
 
     </ul>
 

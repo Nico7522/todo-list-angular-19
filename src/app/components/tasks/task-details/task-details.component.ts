@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { AsyncPipe } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
@@ -11,10 +10,9 @@ import {
   shareReplay,
   switchMap,
 } from 'rxjs';
-import { PriorityPipe } from '../../pipes/priority.pipe';
-import { Priority } from '../../enums/priority.enum';
-import { PriorityComponent } from '../../shared/priority/priority.component';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
+import { PriorityComponent } from '../../../shared/priority/priority.component';
+import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
+import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 
 @Component({
   selector: 'app-task-details',

@@ -12,6 +12,6 @@ import { MessageService } from './services/message.service';
 })
 export class AppComponent {
   readonly #messageService = inject(MessageService);
-  message = this.#messageService.message;
+  messages = this.#messageService.messages;
   title = 'angular-ssr-v19';
 }
