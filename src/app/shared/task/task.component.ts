@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Priority } from '../../enums/priority.enum';
 import { PriorityComponent } from '../priority/priority.component';
 import { EditComponent } from '../edit/edit.component';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-task',
@@ -13,7 +14,7 @@ import { EditComponent } from '../edit/edit.component';
 })
 export class TaskComponent {
   task = input.required<Task>();
-
+  imgUrl = environment.IMG_URL;
   priorityColorClass = computed(() =>
     this.task().priority === Priority.HIGH
       ? 'text-red-500'

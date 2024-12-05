@@ -13,6 +13,7 @@ import {
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-task-details',
@@ -24,6 +25,7 @@ export class TaskDetailsComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly id = input<string>('');
+  imgUrl = environment.IMG_URL;
   priorityColorClass = signal('');
   task$ = toObservable(this.id).pipe(
     switchMap((id) => {

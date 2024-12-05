@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
 import { Task } from '../../../models/task.model';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import { take } from 'rxjs';
+import { catchError, EMPTY, filter, map, of, switchMap, take, tap } from 'rxjs';
+import { MessageService } from '../../../services/message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-task',
@@ -16,14 +18,19 @@ export class CreateTaskComponent {
   #fb = inject(FormBuilder).nonNullable;
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #tasksProvider = inject(FakeTasksProvider);
-
-  taskForm = this.#fb.group({ test: '' });
+  readonly #messageService = inject(MessageService);
+  readonly #router = inject(Router);
+  taskForm = this.#fb.group({});
   userId = this.#usersProvider.currentUser()?.id;
+  formData = signal<FormData | null>(null);
+  handleImage(formDate: FormData) {
+    this.formData.set(formDate);
+  }
   onSubmit() {
     if (this.taskForm.valid) {
-      let val = this.taskForm.getRawValue();
       const title = this.taskForm.get('base.title')?.value;
       const priority = this.taskForm.get('base.priorities')?.value;
+      const image = this.taskForm.get('base.image')?.value;
 
       if (title && priority && this.userId) {
         let task: Task = {
@@ -33,10 +40,27 @@ export class CreateTaskComponent {
           completed: false,
           userId: this.userId,
         };
+
         this.#tasksProvider
-          .create(task)
-          .pipe(take(1))
-          .subscribe((r) => console.log(r));
+          .create(task, this.formData()!)
+          .pipe(
+            catchError(() => {
+              this.#messageService.showMessage(
+                'Une erreur est survenue.',
+                'error'
+              );
+              return EMPTY;
+            })
+          )
+          .subscribe({
+            next: (taskId) => {
+              this.#messageService.showMessage(
+                'La tâche a été crée.',
+                'success'
+              );
+              this.#router.navigate(['/task', taskId]);
+            },
+          });
       }
     }
   }

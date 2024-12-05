@@ -21,11 +21,11 @@
                 <option class="text-black" value="2">Haute</option>
                 <option class="text-black" value="1">Moyenne</option>
                 <option class="text-black" value="0">Basse</option>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2"
+                <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2"
                     stroke="currentColor" class="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                </svg>
+                </svg> -->
             </select>
         </div>
 
@@ -35,5 +35,16 @@
     ?.getError('wrongValue') &&
     this.parentFormGroup.controls['base'].get('priorities')?.touched) {
     <span class="text-red-600 text-center w-full">Champ requis</span>
+    }
+
+    <div>
+        <label for="image">Image ?</label>
+        <input (change)="onImageChange($event)" formControlName="image" id="image" type="file">
+    </div>
+    @if (this.parentFormGroup.controls['base']
+    .get('image')
+    ?.getError('required') &&
+    this.parentFormGroup.controls['base'].get('image')?.touched) {
+    <span class="text-red-600 text-center w-full">Image requise</span>
     }
 </fieldset>

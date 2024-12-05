@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, output } from '@angular/core';
 import {
   AbstractControl,
   ControlContainer,
@@ -47,6 +47,10 @@ export class BaseTaskFormComponent {
           nonNullable: true,
           validators: [Validators.required, this.propertyValidator()],
         }),
+        image: new FormControl(null, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
       })
     );
   }
@@ -67,5 +71,18 @@ export class BaseTaskFormComponent {
 
       return null;
     };
+  }
+
+  imageChange = output<FormData>();
+  onImageChange(event: any) {
+    if (event!.target!.files!.length > 0) {
+      const file = event.target.files[0];
+      let formData = new FormData();
+      formData.append('image', file, file.name);
+
+      this.parentFormGroup.get('image')?.patchValue(file);
+
+      this.imageChange.emit(formData);
+    }
   }
 }

@@ -1,7 +1,7 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()"
     class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center">
-    <app-base-task-form controlKey="base" />
-    <button [disabled]="!taskForm.valid"
+    <app-base-task-form controlKey="base" (imageChange)="handleImage($event)" />
+    <button
         class="mt-5 rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-slate-800 transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
         type="submit">
         Créer

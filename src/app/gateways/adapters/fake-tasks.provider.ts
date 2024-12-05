@@ -6,34 +6,46 @@ import {
   Subject,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
 import { completed, images, titles, users } from '../../services/data';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
-  override create(task: Task): Observable<boolean> {
+  readonly #httpClient = inject(HttpClient);
+  override uploadImage(formData: FormData): Observable<any> {
+    return this.#httpClient.post<any>('http://localhost:3000/upload', formData);
+  }
+  override create(task: Task, formData: FormData): Observable<number> {
     return this.taskList$.pipe(
       take(1),
-      map((tasks) => {
-        const previousLength = tasks.length;
-        let newTaskList = [...tasks, { ...task, id: tasks.length + 1 }];
-        if (previousLength < newTaskList.length) {
-          this.taskList$.next(newTaskList);
-          return true;
-        } else {
-          throw new CustomError('Task not created', { status: 400 });
-        }
+      switchMap((tasks) => {
+        return this.uploadImage(formData).pipe(
+          map((res) => {
+            task.imgUrl = res.file.filename;
+            const previousLength = tasks.length;
+            let newTaskList = [...tasks, { ...task, id: tasks.length + 1 }];
+            if (previousLength < newTaskList.length) {
+              this.taskList$.next(newTaskList);
+              return newTaskList.length;
+            } else {
+              throw new CustomError(res.error || 'Task not created', {
+                status: 400,
+              });
+            }
+          })
+        );
       })
     );
   }
-  text$: Subject<number> = new Subject<number>();
 
   override edit(id: number, task: Partial<Task>): Observable<boolean> {
     let newTasksList: Task[] = [];

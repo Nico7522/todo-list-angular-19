@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,7 +11,12 @@ import {
   withEventReplay,
   withIncrementalHydration,
 } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  provideHttpClient,
+  withFetch,
+} from '@angular/common/http';
 import { TasksProvider } from './gateways/ports/tasks.provider';
 import { FakeTasksProvider } from './gateways/adapters/fake-tasks.provider';
 import { UsersProvider } from './gateways/ports/users.provider';
