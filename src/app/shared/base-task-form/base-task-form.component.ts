@@ -74,12 +74,12 @@ export class BaseTaskFormComponent {
   }
 
   imageChange = output<FormData>();
-  onImageChange(event: any) {
-    if (event!.target!.files!.length > 0) {
-      const file = event.target.files[0];
+  onImageChange(event: Event) {
+    let eventTarget = event.target as HTMLInputElement;
+    if (eventTarget.files && eventTarget.files.length > 0) {
+      const file = eventTarget.files[0];
       let formData = new FormData();
       formData.append('image', file, file.name);
-
       this.parentFormGroup.get('image')?.patchValue(file);
 
       this.imageChange.emit(formData);

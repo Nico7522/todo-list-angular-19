@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
 import { Task } from '../../../models/task.model';
@@ -7,6 +7,7 @@ import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provide
 import { catchError, EMPTY, filter, map, of, switchMap, take, tap } from 'rxjs';
 import { MessageService } from '../../../services/message.service';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-task',
@@ -20,9 +21,10 @@ export class CreateTaskComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
+  destroyRef = inject(DestroyRef);
   taskForm = this.#fb.group({});
   userId = this.#usersProvider.currentUser()?.id;
-  formData = signal<FormData | null>(null);
+  formData = signal<FormData>(new FormData());
   handleImage(formDate: FormData) {
     this.formData.set(formDate);
   }
@@ -42,9 +44,10 @@ export class CreateTaskComponent {
         };
 
         this.#tasksProvider
-          .create(task, this.formData()!)
+          .create(task, this.formData())
           .pipe(
-            catchError(() => {
+            takeUntilDestroyed(this.destroyRef),
+            catchError((e) => {
               this.#messageService.showMessage(
                 'Une erreur est survenue.',
                 'error'

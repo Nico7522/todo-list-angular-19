@@ -22,9 +22,15 @@ import { HttpClient } from '@angular/common/http';
 export class FakeTasksProvider extends TasksProvider {
   readonly #httpClient = inject(HttpClient);
   override uploadImage(formData: FormData): Observable<any> {
+    for (const edit of formData) {
+      console.log(edit);
+    }
     return this.#httpClient.post<any>('http://localhost:3000/upload', formData);
   }
   override create(task: Task, formData: FormData): Observable<number> {
+    for (const f of formData) {
+      console.log(f);
+    }
     return this.taskList$.pipe(
       take(1),
       switchMap((tasks) => {
@@ -50,6 +56,7 @@ export class FakeTasksProvider extends TasksProvider {
   override edit(id: number, task: Partial<Task>): Observable<boolean> {
     let newTasksList: Task[] = [];
     return this.taskList$.pipe(
+      take(1),
       map((tasks) => {
         let index = tasks.findIndex((t) => t.id === id);
         if (index !== -1) {

@@ -40,7 +40,7 @@ app.use(cors())
 app.post('/upload', upload.single('image'), (req, res) => {
     console.log('ok');
     
-  if (req.file) {
+  if (!req.file) {
     return res.status(400).json({ error: 'Aucun fichier fourni ou fichier invalide.' });
   }
   res.status(200).json({

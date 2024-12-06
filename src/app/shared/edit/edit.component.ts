@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
@@ -7,6 +7,7 @@ import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { catchError, EMPTY } from 'rxjs';
 import { Response } from '../../models/response.model';
 import { MessageService } from '../../services/message.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit',
@@ -19,6 +20,7 @@ export class EditComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
+  destroyRef = inject(DestroyRef);
   task = input.required<Task>();
   response = signal<Response>('loading');
   showModal = signal(false);
@@ -38,6 +40,7 @@ export class EditComponent {
     this.#tasksProvider
       .delete(this.task().id)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         catchError(() => {
           this.#messageService.showMessage('Une erreur est survenue.', 'error');
           return EMPTY;

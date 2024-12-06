@@ -1,5 +1,16 @@
-import { Component, inject, Input, input, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  input,
+  signal,
+} from '@angular/core';
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, EMPTY, map, switchMap, take } from 'rxjs';
 import { Router } from '@angular/router';
@@ -20,6 +31,7 @@ export class TaskEditComponent {
   readonly #formBuilder = inject(FormBuilder);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
+  destroyRef = inject(DestroyRef);
   id = input.required<string>();
   taskId$ = toObservable(this.id);
   response = signal<Response>('loading');
@@ -47,7 +59,7 @@ export class TaskEditComponent {
     this.#tasksProvider
       .edit(+this.id(), task as Partial<Task>)
       .pipe(
-        take(1),
+        takeUntilDestroyed(this.destroyRef),
         catchError((err) => {
           this.#messageService.showMessage('Une erreur est survenue.', 'error');
 
