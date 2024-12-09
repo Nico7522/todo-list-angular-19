@@ -4,14 +4,29 @@ import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-
 import { Task } from '../../../models/task.model';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import { catchError, EMPTY, filter, map, of, switchMap, take, tap } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  filter,
+  map,
+  of,
+  Subject,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { MessageService } from '../../../services/message.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ConfirmationModalComponent } from '../../../shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-create-task',
-  imports: [ReactiveFormsModule, BaseTaskFormComponent],
+  imports: [
+    ReactiveFormsModule,
+    BaseTaskFormComponent,
+    ConfirmationModalComponent,
+  ],
   templateUrl: './create-task.component.html',
   styleUrl: './create-task.component.scss',
 })
@@ -25,6 +40,7 @@ export class CreateTaskComponent {
   taskForm = this.#fb.group({});
   userId = this.#usersProvider.currentUser()?.id;
   formData = signal<FormData>(new FormData());
+  showModal = signal(false);
   handleImage(formDate: FormData) {
     this.formData.set(formDate);
   }
@@ -66,5 +82,21 @@ export class CreateTaskComponent {
           });
       }
     }
+  }
+
+  canQuit$: Subject<boolean> = new Subject();
+
+  showModalConfirmation() {
+    this.showModal.set(true);
+  }
+
+  onConfirm() {
+    this.canQuit$.next(true);
+    this.showModal.set(false);
+  }
+
+  onCancel() {
+    this.canQuit$.next(false);
+    this.showModal.set(false);
   }
 }

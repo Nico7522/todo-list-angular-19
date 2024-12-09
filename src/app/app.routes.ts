@@ -7,7 +7,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   {
     path: 'task',
-    // canActivate: [canNavigateGuard],
+    canActivate: [canNavigateGuard],
     loadChildren: () => import('./components/tasks/task.routes'),
   },
 ];

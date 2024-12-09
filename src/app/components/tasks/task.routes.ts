@@ -1,3 +1,4 @@
+import { canQuitGuard } from '../../guards/can-quit.guard';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { MyTasksComponent } from './my-tasks/my-tasks.component';
 import { TaskDetailsComponent } from './task-details/task-details.component';
@@ -21,6 +22,7 @@ const TASK_ROUTES: Route[] = [
       },
       {
         path: 'create',
+        canDeactivate: [canQuitGuard],
         component: CreateTaskComponent,
       },
       {

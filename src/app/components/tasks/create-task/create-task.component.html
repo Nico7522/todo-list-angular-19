@@ -7,3 +7,8 @@
         Créer
     </button>
 </form>
+
+@if (showModal()) {
+<app-confirmation-modal (confirm)="onConfirm()" (cancel)="onCancel()" />
+
+}
