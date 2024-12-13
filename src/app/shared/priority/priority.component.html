@@ -1,4 +1,7 @@
-<span [class.text-green-500]="priority() === priorityEnum.LOW"
-    [class.text-orange-500]="priority() === priorityEnum.MEDIUM" [class.text-red-500]="priority() === priorityEnum.HIGH"
-    class="ml-2">{{priority() || 0 |
+<span [class.text-green-800]="priority() === priorityEnum.LOW"
+    [class.text-yellow-800]="priority() === priorityEnum.MEDIUM" [class.text-red-800]="priority() === priorityEnum.HIGH"
+    [class.bg-green-100]="priority() === priorityEnum.LOW" [class.bg-yellow-100]="priority() === priorityEnum.MEDIUM"
+    [class.bg-red-100]="priority() === priorityEnum.HIGH"
+    class="text-xs font-medium w-20 text-center  ml-2 px-1 py-0.5 rounded">{{priority()
+    || 0 |
     priority}}</span>

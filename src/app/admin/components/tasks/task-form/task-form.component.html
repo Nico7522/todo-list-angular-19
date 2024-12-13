@@ -1,12 +1,6 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()"
     class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center">
-    <app-base-task-form controlKey="base" (imageChange)="handleImage($event)" />
-
+    <app-base-task-form controlKey="base" />
     <button type="submit" [disabled]="!taskForm.valid"
         class="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 my-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:hover:bg-gray-800">Valider</button>
 </form>
-
-@if (showModal()) {
-<app-confirmation-modal (confirm)="onConfirm()" (cancel)="onCancel()" />
-
-}

@@ -46,4 +46,16 @@ export const serverRoutes: ServerRoute[] = [
       return ids.map((id) => ({ id }));
     },
   },
+  {
+    path: 'admin',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'admin/tasks',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'admin/create',
+    renderMode: RenderMode.Prerender,
+  },
 ];

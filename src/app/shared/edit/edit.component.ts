@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
@@ -25,8 +32,14 @@ export class EditComponent {
   response = signal<Response>('loading');
   showModal = signal(false);
   onMyTaskPage = input<boolean>(this.#router.url === '/task/my-tasks');
+  onAdminPage = input<boolean>(this.#router.url === '/admin/tasks');
   currentUser = this.#usersProvider.currentUser;
-
+  role = this.#usersProvider.role;
+  editUrl = computed(() =>
+    this.role() === 'admin'
+      ? `/admin/task/${this.task().id}/edit`
+      : `/task/${this.task().id}/edit`
+  );
   onDelete() {
     this.showModal.set(true);
   }

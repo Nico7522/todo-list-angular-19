@@ -9,10 +9,11 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { PrioritySelectComponent } from '../priority-select/priority-select.component';
 
 @Component({
   selector: 'app-base-task-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PrioritySelectComponent],
   host: {
     class: 'w-full',
   },

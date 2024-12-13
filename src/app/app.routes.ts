@@ -10,4 +10,8 @@ export const routes: Routes = [
     canActivate: [canNavigateGuard],
     loadChildren: () => import('./components/tasks/task.routes'),
   },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/components/admin.routes'),
+  },
 ];

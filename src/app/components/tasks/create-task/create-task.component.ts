@@ -44,6 +44,7 @@ export class CreateTaskComponent {
   handleImage(formDate: FormData) {
     this.formData.set(formDate);
   }
+
   onSubmit() {
     if (this.taskForm.valid) {
       const title = this.taskForm.get('base.title')?.value;

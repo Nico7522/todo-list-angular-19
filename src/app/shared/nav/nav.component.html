@@ -7,8 +7,10 @@
         <li class=""><a routerLink="/" (click)="onDisconnect()">Home</a></li>
         <li><a routerLink="/task/list">Liste des tâches</a></li>
         <li><a routerLink="/task/my-tasks">Mes tâches</a></li>
-        <li><a routerLink="/task/create">Ajouter une tâche</a></li>
-
+        <li><a routerLink="/task/create">Ajouter une tâche à ma liste</a></li>
+        @if (role() === "admin") {
+        <li><a routerLink="/admin">Dashboard Admin</a></li>
+        }
 
     </ul>
 

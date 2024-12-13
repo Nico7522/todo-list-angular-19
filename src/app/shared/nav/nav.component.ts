@@ -13,6 +13,7 @@ export class NavComponent {
   readonly #router = inject(Router);
   canShowMenu = this.#usersProvider.showMenu;
   currentUser = this.#usersProvider.currentUser;
+  role = this.#usersProvider.role;
 
   onDisconnect() {
     this.#usersProvider.logout();

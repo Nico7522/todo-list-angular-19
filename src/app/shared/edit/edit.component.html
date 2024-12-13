@@ -1,5 +1,5 @@
-@if (currentUser()?.id === task().userId && onMyTaskPage()) {
-<button routerLink="/task/{{task().id}}/edit"
+@if (currentUser()?.id === task().userId && onMyTaskPage() || role() === "admin" && onAdminPage()) {
+<!-- <button [routerLink]="editUrl()"
     class="rounded-md bg-green-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
     type="button">
     Editer
@@ -8,8 +8,12 @@
     class="rounded-md bg-red-600 py-1 px-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-700 focus:shadow-none active:bg-red-700 hover:bg-red-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
     type="button">
     Supprimer
-</button>
+</button> -->
+<button [routerLink]="editUrl()" type="button"
+    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm py-1 px-2 me-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Editer</button>
 
+<button (click)="onDelete()" type="button"
+    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm py-1 px-2 me-2  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Supprimer</button>
 
 }
 @if (showModal()) {

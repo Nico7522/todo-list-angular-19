@@ -12,24 +12,8 @@
     <span class="text-red-600 text-center w-full">Champ requis</span>
     }
 
-    <div class="w-full mt-5">
-        <div class="relative">
-            <label class="mb-2" for="priorities">Priorité</label>
-            <select id="priorities" formControlName="priorities"
-                class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer">
-                <option class="text-black" value="3">Choissir la priorité</option>
-                <option class="text-black" value="2">Haute</option>
-                <option class="text-black" value="1">Moyenne</option>
-                <option class="text-black" value="0">Basse</option>
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2"
-                    stroke="currentColor" class="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                </svg> -->
-            </select>
-        </div>
+    <app-priority-select formControlName="priorities" />
 
-    </div>
     @if (this.parentFormGroup.controls['base']
     .get('priorities')
     ?.getError('wrongValue') &&
