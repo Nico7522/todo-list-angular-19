@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, shareReplay } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UsersProvider } from '../ports/users.provider';
 import { users } from '../../services/data';
@@ -22,10 +22,11 @@ export class FakeUsersProvider extends UsersProvider {
   }
   override createUser(username: string): void {
     let user: User = {
-      id: 100,
+      id: users.length + 1,
       username: username,
     };
     users.push(user);
+
     this.login(user);
   }
   override getUser(id: number): Observable<User | null> {

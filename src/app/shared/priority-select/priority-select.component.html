@@ -1,4 +1,4 @@
-<fieldset class=" mt-5">
+<fieldset class="mt-6">
     <label class="mr-3">Priorité</label>
     <span (click)="onChange(0)" [class.border-2]="selectedPriority() === 0"
         [class.border-white]="selectedPriority() === 0"
@@ -9,5 +9,4 @@
     <span (click)="onChange(2)" [class.border-2]="selectedPriority() === 2"
         [class.border-white]="selectedPriority() === 2"
         class="bg-red-100 text-red-800  font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 cursor-pointer">Haute</span>
-
 </fieldset>

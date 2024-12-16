@@ -3,10 +3,11 @@ import { FakeTasksProvider } from '../../../../gateways/adapters/fake-tasks.prov
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FilterComponent } from '../../../../shared/filter/filter.component';
 import { TaskComponent } from '../../../../shared/task/task.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-task-list',
-  imports: [FilterComponent, TaskComponent],
+  imports: [FilterComponent, TaskComponent, RouterModule],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })

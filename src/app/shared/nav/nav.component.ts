@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 
@@ -11,7 +11,6 @@ import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 export class NavComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #router = inject(Router);
-  canShowMenu = this.#usersProvider.showMenu;
   currentUser = this.#usersProvider.currentUser;
   role = this.#usersProvider.role;
 

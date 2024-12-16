@@ -1,6 +1,32 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()"
-    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center">
-    <app-base-task-form controlKey="base" />
+    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5  ">
+    <app-base-task-form controlKey="base" (imageChange)="handleImage($event)" />
+
+    <button (click)="onAssignUser()" type="button"
+        class="text-gray-900 m-auto px-3 py-2.5 my-5 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg ">Assigner
+        un
+        utilisateur ?</button>
+
+    <div
+        class="{{assignUser() ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}} transition ease-in-out  mx-10">
+        @if (assignUser()) {
+        <label for="users" class="my-2 text-start  text-white">Choisir un utilisateur</label>
+        <select id="users" formControlName="user"
+            class=" border w-full my-2  border-gray-300 text-white text-sm rounded-lg block p-2.5 bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white ">
+            <option value="">Utilisateur</option>
+            @for (user of users$ | async; track user.id) {
+            <option [value]="user.id">{{user.username}}</option>
+            }
+        </select>
+
+
+        }
+    </div>
     <button type="submit" [disabled]="!taskForm.valid"
-        class="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2.5 me-2 my-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:hover:bg-gray-800">Valider</button>
+        class="text-white  m-auto bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2.5  my-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 disabled:opacity-50 disabled:hover:bg-gray-800">Valider</button>
 </form>
+
+@if (showModal()) {
+<app-confirmation-modal (confirm)="onConfirm()" (cancel)="onCancel()" />
+
+}

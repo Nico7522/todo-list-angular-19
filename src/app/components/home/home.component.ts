@@ -28,6 +28,9 @@ export class HomeComponent {
     this.#usersProvider.setUsername(username.toLowerCase());
   }
 
+  ngOnInit() {
+    this.#usersProvider.logout();
+  }
   onStart() {
     this.#usersProvider.createUser(this.username());
     this.#usersProvider.setShowMenu(true);

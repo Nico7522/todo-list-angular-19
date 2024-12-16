@@ -28,9 +28,6 @@ export class FakeTasksProvider extends TasksProvider {
     return this.#httpClient.post<any>('http://localhost:3000/upload', formData);
   }
   override create(task: Task, formData: FormData): Observable<number> {
-    for (const f of formData) {
-      console.log(f);
-    }
     return this.taskList$.pipe(
       take(1),
       switchMap((tasks) => {

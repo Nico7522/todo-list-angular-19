@@ -5,6 +5,7 @@ import { Task } from '../../../models/task.model';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import {
+  BehaviorSubject,
   catchError,
   EMPTY,
   filter,
@@ -41,8 +42,8 @@ export class CreateTaskComponent {
   userId = this.#usersProvider.currentUser()?.id;
   formData = signal<FormData>(new FormData());
   showModal = signal(false);
-  handleImage(formDate: FormData) {
-    this.formData.set(formDate);
+  handleImage(formData: FormData) {
+    this.formData.set(formData);
   }
 
   onSubmit() {
@@ -74,6 +75,7 @@ export class CreateTaskComponent {
           )
           .subscribe({
             next: (taskId) => {
+              this.formSubmitedAndValid.set(true);
               this.#messageService.showMessage(
                 'La tâche a été crée.',
                 'success'
@@ -86,7 +88,7 @@ export class CreateTaskComponent {
   }
 
   canQuit$: Subject<boolean> = new Subject();
-
+  formSubmitedAndValid = signal(false);
   showModalConfirmation() {
     this.showModal.set(true);
   }

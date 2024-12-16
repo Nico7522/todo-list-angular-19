@@ -4,7 +4,7 @@
     </h1>
     @if (currentUser()) {
     <ul class="flex items-center justify-center gap-5 text-white">
-        <li class=""><a routerLink="/" (click)="onDisconnect()">Home</a></li>
+        <li class=""><a routerLink="/">Home</a></li>
         <li><a routerLink="/task/list">Liste des tâches</a></li>
         <li><a routerLink="/task/my-tasks">Mes tâches</a></li>
         <li><a routerLink="/task/create">Ajouter une tâche à ma liste</a></li>
@@ -13,7 +13,6 @@
         }
 
     </ul>
-
     }
     @if (currentUser()) {
     <div class="mr-2 m-auto flex items-center justify-center">
@@ -24,7 +23,5 @@
             Déconnection
         </button>
     </div>
-
     }
-
 </nav>
