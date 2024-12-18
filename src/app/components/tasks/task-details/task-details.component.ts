@@ -41,7 +41,8 @@ export class TaskDetailsComponent {
   user$ = this.task$.pipe(
     filter((t) => t !== null),
     switchMap((task) => {
-      return this.#usersProvider.getUser(task.userId);
+      if (task.userId) return this.#usersProvider.getUser(task.userId);
+      return of(null);
     })
   );
 

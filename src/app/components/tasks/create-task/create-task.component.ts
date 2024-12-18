@@ -52,7 +52,7 @@ export class CreateTaskComponent {
       const priority = this.taskForm.get('base.priorities')?.value;
       const image = this.taskForm.get('base.image')?.value;
 
-      if (title && priority && this.userId) {
+      if (title && (priority || priority === 0) && this.userId) {
         let task: Task = {
           id: 0,
           title: title,
@@ -75,7 +75,7 @@ export class CreateTaskComponent {
           )
           .subscribe({
             next: (taskId) => {
-              this.formSubmitedAndValid.set(true);
+              this.isFormUntouched.set(true);
               this.#messageService.showMessage(
                 'La tâche a été crée.',
                 'success'
@@ -88,7 +88,7 @@ export class CreateTaskComponent {
   }
 
   canQuit$: Subject<boolean> = new Subject();
-  formSubmitedAndValid = signal(false);
+  isFormUntouched = signal(true);
   showModalConfirmation() {
     this.showModal.set(true);
   }
@@ -101,5 +101,11 @@ export class CreateTaskComponent {
   onCancel() {
     this.canQuit$.next(false);
     this.showModal.set(false);
+  }
+
+  ngAfterViewInit() {
+    this.taskForm.valueChanges
+      .pipe(take(1))
+      .subscribe(() => this.isFormUntouched.set(false));
   }
 }

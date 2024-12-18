@@ -4,7 +4,7 @@ import { CanQuit, CanQuitType } from '../models/can-quit.interface';
 export const canQuitGuard: CanDeactivateFn<CanQuit> = (
   component: CanQuit
 ): CanQuitType => {
-  if (component.formSubmitedAndValid()) return true;
+  if (component.isFormUntouched()) return true;
   else {
     let canQuit$ = component.canQuit$;
     component.showModalConfirmation();

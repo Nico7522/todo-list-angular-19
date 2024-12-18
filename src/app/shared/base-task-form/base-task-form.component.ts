@@ -10,6 +10,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { PrioritySelectComponent } from '../priority-select/priority-select.component';
+import { Task } from '../../models/task.model';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-base-task-form',
@@ -29,8 +31,9 @@ import { PrioritySelectComponent } from '../priority-select/priority-select.comp
 export class BaseTaskFormComponent {
   @Input({ required: true }) controlKey = '';
   @Input() label = '';
-
+  @Input() task: Task | null = null;
   parentContainer = inject(ControlContainer);
+  imgUrl = environment.IMG_URL;
 
   get parentFormGroup(): FormGroup {
     return this.parentContainer.control as FormGroup;
@@ -44,9 +47,9 @@ export class BaseTaskFormComponent {
           nonNullable: true,
           validators: [Validators.required],
         }),
-        priorities: new FormControl(3, {
+        priorities: new FormControl('', {
           nonNullable: true,
-          validators: [Validators.required, this.propertyValidator()],
+          validators: [Validators.required],
         }),
         image: new FormControl(null, {
           nonNullable: true,
@@ -54,6 +57,12 @@ export class BaseTaskFormComponent {
         }),
       })
     );
+    if (this.task) {
+      this.parentFormGroup.get('base.title')?.patchValue(this.task.title);
+      this.parentFormGroup
+        .get('base.priorities')
+        ?.patchValue(this.task.priority);
+    }
   }
 
   ngOnDestroy() {
@@ -86,4 +95,10 @@ export class BaseTaskFormComponent {
       this.imageChange.emit(formData);
     }
   }
+
+  // ngAfterViewInit() {
+  //   if (this.task) {
+  //     this.parentFormGroup.get('title')?.patchValue(this.task.title);
+  //   }
+  // }
 }

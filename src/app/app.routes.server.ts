@@ -16,6 +16,7 @@ export const serverRoutes: ServerRoute[] = [
     path: 'task',
     renderMode: RenderMode.Server,
   },
+
   {
     path: 'task/list',
     renderMode: RenderMode.Server,
@@ -29,9 +30,10 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
   },
   {
-    path: 'task/:id/edit',
+    path: 'admin/task/:id/edit',
     renderMode: RenderMode.Server,
   },
+
   {
     path: 'task/:id',
     renderMode: RenderMode.Prerender,
@@ -48,14 +50,19 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'admin',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Server,
   },
   {
     path: 'admin/tasks',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Server,
   },
+
   {
     path: 'admin/create',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'task/:id/edit',
+    renderMode: RenderMode.Server,
   },
 ];

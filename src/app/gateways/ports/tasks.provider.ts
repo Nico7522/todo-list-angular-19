@@ -8,5 +8,5 @@ export abstract class TasksProvider {
   abstract delete(id: number): Observable<boolean>;
   abstract edit(id: number, task: Partial<Task>): Observable<boolean>;
   abstract create(task: Task, formData: FormData): Observable<number>;
-  abstract uploadImage(formData: FormData): Observable<any>;
+  abstract uploadImage(formData: FormData, id: number): Observable<any>;
 }

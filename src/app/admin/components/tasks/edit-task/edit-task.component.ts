@@ -1,65 +1,48 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  Input,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { catchError, EMPTY, map, of, Subject, switchMap, take } from 'rxjs';
+import { Priority } from '../../../../enums/priority.enum';
 import {
   takeUntilDestroyed,
   toObservable,
   toSignal,
 } from '@angular/core/rxjs-interop';
-import {
-  FormBuilder,
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  catchError,
-  EMPTY,
-  map,
-  of,
-  Subject,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
+import { Task } from '../../../../models/task.model';
+import { FakeTasksProvider } from '../../../../gateways/adapters/fake-tasks.provider';
+import { MessageService } from '../../../../services/message.service';
+import { Response } from '../../../../models/response.model';
+import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
 import { Router } from '@angular/router';
-import { MessageService } from '../../../services/message.service';
-import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import { Task } from '../../../models/task.model';
-import { Priority } from '../../../enums/priority.enum';
-import { Response } from '../../../models/response.model';
-import { ConfirmationModalComponent } from '../../../shared/confirmation-modal/confirmation-modal.component';
-import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
+import { BaseTaskFormComponent } from '../../../../shared/base-task-form/base-task-form.component';
 import { AsyncPipe } from '@angular/common';
-import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
+import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 
 @Component({
-  selector: 'app-task-edit',
+  selector: 'app-edit-task',
   imports: [
-    ReactiveFormsModule,
     ConfirmationModalComponent,
+    ReactiveFormsModule,
     BaseTaskFormComponent,
     AsyncPipe,
   ],
-  templateUrl: './task-edit.component.html',
-  styleUrl: './task-edit.component.scss',
+  templateUrl: './edit-task.component.html',
+  styleUrl: './edit-task.component.scss',
 })
-export class TaskEditComponent {
+export class EditTaskComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #usersProvider = inject(FakeUsersProvider);
+
   readonly #formBuilder = inject(FormBuilder);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
+  users$ = this.#usersProvider.getUsers();
   destroyRef = inject(DestroyRef);
   showModal = signal(false);
-
-  user = this.#usersProvider.currentUser;
-
+  assignUser = signal(false);
+  formData = signal<FormData>(new FormData());
+  handleImage(formData: FormData) {
+    this.formData.set(formData);
+  }
   id = input.required<string>();
   taskId$ = toObservable(this.id).pipe(
     switchMap((id) => {
@@ -68,21 +51,20 @@ export class TaskEditComponent {
           this.editForm
             .get('status')
             ?.patchValue(task.completed ? 'true' : 'false');
+          if (task.userId)
+            this.editForm.get('user')?.patchValue(task.userId.toString());
           return task;
         })
       );
     })
   );
-  formData = signal<FormData>(new FormData());
-  handleImage(formData: FormData) {
-    this.formData.set(formData);
-  }
   response = signal<Response>('loading');
 
   onSubmit() {
     const title = this.editForm.get('base.title')?.value;
     const priority = this.editForm.get('base.priorities')?.value;
     const image = this.editForm.get('base.image')?.value;
+    const userId = this.editForm.get('user')?.value;
     let completed = this.editForm.get('status')?.value === 'true';
     if (title && (priority || priority === 0)) {
       let task: Task = {
@@ -90,8 +72,9 @@ export class TaskEditComponent {
         title: title,
         priority: +priority,
         completed: completed,
-        userId: this.user()?.id || null,
+        userId: null,
       };
+      if (userId) task.userId = +userId;
 
       this.#tasksProvider
         .edit(+this.id(), task as Partial<Task>)
@@ -124,9 +107,13 @@ export class TaskEditComponent {
         });
     }
   }
+  onAssignUser() {
+    this.assignUser.set(!this.assignUser());
+  }
 
   editForm = this.#formBuilder.group({
     status: ['', Validators.required],
+    user: [''],
   });
 
   canQuit$: Subject<boolean> = new Subject();

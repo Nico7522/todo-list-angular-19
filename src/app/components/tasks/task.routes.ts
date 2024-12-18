@@ -31,6 +31,7 @@ const TASK_ROUTES: Route[] = [
       },
       {
         path: ':id/edit',
+        canDeactivate: [canQuitGuard],
         component: TaskEditComponent,
       },
     ],

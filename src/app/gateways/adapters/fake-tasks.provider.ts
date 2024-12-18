@@ -1,8 +1,10 @@
 import {
   BehaviorSubject,
+  catchError,
   filter,
   map,
   Observable,
+  of,
   Subject,
   switchMap,
   take,
@@ -21,17 +23,39 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FakeTasksProvider extends TasksProvider {
   readonly #httpClient = inject(HttpClient);
-  override uploadImage(formData: FormData): Observable<any> {
-    for (const edit of formData) {
-      console.log(edit);
-    }
-    return this.#httpClient.post<any>('http://localhost:3000/upload', formData);
+  override uploadImage(formData: FormData, id: number): Observable<any> {
+    return this.#httpClient
+      .post<any>('http://localhost:3000/upload', formData)
+      .pipe(
+        switchMap((res) => {
+          return this.taskList$.pipe(
+            map((tasks) => {
+              let index = tasks.findIndex((t) => t.id === id);
+              if (index !== -1) {
+                tasks[index] = { ...tasks[index], imgUrl: res.file.filename };
+                return res;
+              } else
+                throw new CustomError(
+                  "L'image n'a pas été modifié car la tâche n'a pas été trouvée",
+                  {
+                    status: 400,
+                  }
+                );
+            })
+          );
+        }),
+        catchError(() => {
+          throw new CustomError("Erreur lors de l'upload de l'image", {
+            status: 400,
+          });
+        })
+      );
   }
   override create(task: Task, formData: FormData): Observable<number> {
     return this.taskList$.pipe(
       take(1),
       switchMap((tasks) => {
-        return this.uploadImage(formData).pipe(
+        return this.uploadImage(formData, task.id).pipe(
           map((res) => {
             task.imgUrl = res.file.filename;
             const previousLength = tasks.length;
@@ -40,9 +64,12 @@ export class FakeTasksProvider extends TasksProvider {
               this.taskList$.next(newTaskList);
               return newTaskList.length;
             } else {
-              throw new CustomError(res.error || 'Task not created', {
-                status: 400,
-              });
+              throw new CustomError(
+                res.error || "La tâche n'a pas pu être crée",
+                {
+                  status: 400,
+                }
+              );
             }
           })
         );
@@ -60,7 +87,10 @@ export class FakeTasksProvider extends TasksProvider {
           tasks[index] = { ...tasks[index], ...task };
           newTasksList = [...tasks];
           return true;
-        } else throw new CustomError('Task not updated', { status: 400 });
+        } else
+          throw new CustomError("La tâche n'a pas pu être modifiée", {
+            status: 400,
+          });
       })
     );
   }
@@ -74,7 +104,9 @@ export class FakeTasksProvider extends TasksProvider {
           this.taskList$.next(newTasksList);
           return true;
         } else {
-          throw new CustomError('Task not deleted', { status: 400 });
+          throw new CustomError("La tâche n'a pas pu être supprimée", {
+            status: 400,
+          });
         }
       })
     );

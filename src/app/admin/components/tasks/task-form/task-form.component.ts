@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../../shared/base-task-form/base-task-form.component';
 import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { catchError, EMPTY, Subject, tap } from 'rxjs';
+import { catchError, EMPTY, Subject, take, tap } from 'rxjs';
 import { FakeTasksProvider } from '../../../../gateways/adapters/fake-tasks.provider';
 import { Task } from '../../../../models/task.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -48,13 +48,13 @@ export class TaskFormComponent {
       const priority = this.taskForm.get('base.priorities')?.value;
       const image = this.taskForm.get('base.image')?.value;
       const userId = this.taskForm.get('user')?.value;
-      if (title && priority && userId) {
+      if (title && (priority || priority === 0)) {
         let task: Task = {
           id: 0,
           title: title,
           priority: +priority,
           completed: false,
-          userId: +userId,
+          userId: userId ? +userId : null,
         };
 
         this.#tasksProvider
@@ -71,7 +71,7 @@ export class TaskFormComponent {
           )
           .subscribe({
             next: (taskId) => {
-              this.formSubmitedAndValid.set(true);
+              this.isFormUntouched.set(true);
               this.#messageService.showMessage(
                 'La tâche a été crée.',
                 'success'
@@ -88,7 +88,7 @@ export class TaskFormComponent {
   }
 
   canQuit$: Subject<boolean> = new Subject();
-  formSubmitedAndValid = signal(false);
+  isFormUntouched = signal(false);
   showModalConfirmation() {
     this.showModal.set(true);
   }
@@ -101,5 +101,11 @@ export class TaskFormComponent {
   onCancel() {
     this.canQuit$.next(false);
     this.showModal.set(false);
+  }
+
+  ngAfterViewInit() {
+    this.taskForm.valueChanges
+      .pipe(take(1))
+      .subscribe(() => this.isFormUntouched.set(false));
   }
 }

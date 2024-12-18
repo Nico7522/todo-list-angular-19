@@ -1,8 +1,8 @@
 <fieldset class="mx-10" [formGroupName]="controlKey">
-    <div class="">
-        <label class="mb-2" for="title">Titre</label>
+    <div>
+        <label for="title">Titre</label>
         <input formControlName="title" id="title" required
-            class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            class="w-full bg-transparent mt-2 placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
             placeholder="Titre ...">
     </div>
     @if (this.parentFormGroup.controls['base']
@@ -21,12 +21,17 @@
     <span class="text-red-600 text-center w-full">Champ requis</span>
     }
 
+    @if (task?.imgUrl) {
+    <div class="mt-5">
+        <img [src]="imgUrl + '/' + task?.imgUrl" alt="Image de la tâche">
+    </div>
+    }
+
     <div class="mt-5">
         <label class="block mb-2  font-medium text-white dark:text-white" for="image">Image de la tâche</label>
         <input formControlName="image" (change)="onImageChange($event)"
             class="block w-full text-sm border border-slate-200 rounded-lg cursor-pointer  text-white focus:outline-none  dark:border-gray-600 "
             id="image" type="file">
-
     </div>
     @if (this.parentFormGroup.controls['base']
     .get('image')
