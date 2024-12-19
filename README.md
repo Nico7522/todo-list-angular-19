@@ -25,3 +25,9 @@ Lancer l'application -> ng s -o
 Une fois sur la page d'acceuil, vous pouvez choisir entre utiliser l'application en tant qu'utilisateur ou en tant qu'admin. 
 Faite votre choix et entrez un nom d'utilisateur et cliquez sur commencer.
 
+## Application encore en cours de développement 
+
+Attention l'application n'est pas finie. 
+
+Il reste la gestion des utilisateurs pour les admins et rendre responsives toutes l'application. Sans compter les nombreux bugs (que je n'ai pas encore remarqué 🙃) à régler.
+
