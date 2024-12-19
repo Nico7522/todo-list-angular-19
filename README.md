@@ -15,7 +15,9 @@ Pourquoi ?
 ## Comment utiliser l'application en local ?
 
 Clôner le repos -> git clone "lien du repos"
+
 Installer les dépendances -> npm i 
+
 Lancer l'application -> ng s -o 
 
 ## Comment l'application fonctionne ?
