@@ -1,0 +1,49 @@
+@if (user$ | async; as user) {
+
+<div class="text-center  mt-5 border mx-20 ">
+    <h1 class="text-white text-3xl">{{user.username}}</h1>
+
+    <table class="w-full text-sm text-center rtl:text-right text-white">
+        <thead class="text-xs uppercase text-center">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    ID
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Titre
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Priorité
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (task of tasks$ | async; track task.id) {
+            <tr class="border-b">
+                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap ">
+                    {{task.id}}
+                </th>
+                <td class="px-6 py-4">
+                    {{task.title}}
+                </td>
+                <td class="px-6 py-4">
+                    <app-priority [priority]="task.priority" />
+                </td>
+                <td class="px-6 py-4">
+                    <p [class.text-green-500]="task.completed" [class.text-red-500]="!task.completed"
+                        class="p-2 align-bottom">
+                        {{task.completed ?
+                        'Terminée' :
+                        'En cours'}}
+                    </p>
+                </td>
+            </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+}
