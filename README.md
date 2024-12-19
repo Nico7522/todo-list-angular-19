@@ -1,4 +1,4 @@
-# AngularSsrV19
+# App Todo Angular 19 (NO API)
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.0.
 
