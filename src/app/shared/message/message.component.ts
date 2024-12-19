@@ -24,10 +24,6 @@ export class MessageComponent {
     setTimeout(() => {
       this.canShowMessage.set(true);
     }, 100);
-
-    // setTimeout(() => {
-    //   this.#messageService.hideMessage();
-    // }, 3000);
   }
 
   hideMessage() {

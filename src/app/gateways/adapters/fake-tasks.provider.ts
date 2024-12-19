@@ -17,6 +17,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +26,15 @@ export class FakeTasksProvider extends TasksProvider {
   readonly #httpClient = inject(HttpClient);
   override uploadImage(formData: FormData, id: number): Observable<any> {
     return this.#httpClient
-      .post<any>('http://localhost:3000/upload', formData)
+      .post<any>(`${environment.API_IGM_URL}`, formData)
       .pipe(
+        take(1),
         switchMap((res) => {
           return this.taskList$.pipe(
+            take(1),
             map((tasks) => {
+              console.log(id);
+
               let index = tasks.findIndex((t) => t.id === id);
               if (index !== -1) {
                 tasks[index] = { ...tasks[index], imgUrl: res.file.filename };

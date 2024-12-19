@@ -13,6 +13,10 @@ export class MessageService {
       ...prev,
       { message, response, canShow: true },
     ]);
+
+    setTimeout(() => {
+      this.hideMessage();
+    }, 3000);
   }
 
   hideMessage() {

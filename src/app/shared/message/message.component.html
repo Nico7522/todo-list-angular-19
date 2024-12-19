@@ -1,15 +1,12 @@
-<!-- @if (!destoyComponent()) { -->
 <div [class.bg-green-200]="response() === 'success'" [class.bg-red-300]="response() === 'error'"
     class="{{canShowMessage() ? 'opacity-100 translate-y-0': 'opacity-0 -translate-y-10'}} w-96 h-12 rounded-lg  m-auto text-center transition ease-in-out duration-200">
     <button [class.text-green-600]="response() === 'success'" [class.text-red-600]="response() === 'error'"
         (click)="hideMessage()" class="absolute right-1 top-0">X</button>
     @if (canShowMessage()) {
-    <div class=" mt-2">
+    <div class=" mt-2 text-center mx-10">
         <span [class.text-green-600]="response() === 'success'" [class.text-red-600]="response() === 'error'"
             class="text-1xl">{{message()}}</span>
 
     </div>
     }
 </div>
-
-<!-- } -->

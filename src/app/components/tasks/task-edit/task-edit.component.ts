@@ -107,7 +107,14 @@ export class TaskEditComponent {
             return of(res);
           }),
           catchError((err) => {
-            this.#messageService.showMessage(err.message, 'error');
+            if (err.message === "Erreur lors de l'upload de l'image") {
+              this.#messageService.showMessage(
+                "Tâche édité mais erreur lors du changement de l'image",
+                'error'
+              );
+            } else {
+              this.#messageService.showMessage(err.message, 'error');
+            }
             return EMPTY;
           })
         )
@@ -152,5 +159,9 @@ export class TaskEditComponent {
     this.editForm.valueChanges
       .pipe(take(1))
       .subscribe(() => this.isFormUntouched.set(false));
+  }
+
+  ngOnDestroy() {
+    console.log('destroy');
   }
 }

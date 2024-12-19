@@ -56,9 +56,12 @@ export const serverRoutes: ServerRoute[] = [
     path: 'admin/tasks',
     renderMode: RenderMode.Server,
   },
-
   {
     path: 'admin/create',
+    renderMode: RenderMode.Server,
+  },
+  {
+    path: 'users',
     renderMode: RenderMode.Server,
   },
   {
