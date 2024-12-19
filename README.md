@@ -7,7 +7,9 @@ Cette application utilise une petite API uniquement pour gérer les images. Le r
 Pourquoi ?
 
 1 - Le but est de me concentrer uniquement sur le front, et donc "perdre du temps" à développer une partie back n'est pas mon objectif.
+
 2 - En devant développer ce qui ce fait en back-end, côté front-end, cela me force à mettre énormément de chose en pratique comme le Rxjs, les signals, la gestion d'état, gérer les abonnements, les "side effect" ...
+
 3 - Car le point 2 est un très bon moyen de démontrer ses capacités.
 
 ## Comment utiliser l'application en local ?
