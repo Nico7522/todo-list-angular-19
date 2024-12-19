@@ -1,59 +1,33 @@
-# AngularSsrV19
+# Application "Todo list" en Angular 19/SSR 
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.0.
+Petite application de gestion de tâches mettant en pratique les nouveautés d'Angular 19.
 
-## Development server
+Cette application utilise une petite API uniquement pour gérer les images. Le reste ce déroule uniquement côté front-end. 
 
-To start a local development server, run:
+Pourquoi ?
 
-```bash
-ng serve
-```
+1 - Le but est de me concentrer uniquement sur le front, et donc "perdre du temps" à développer une partie back n'est pas mon objectif.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+2 - En devant développer ce qui ce fait en back-end, côté front-end, cela me force à mettre énormément de chose en pratique comme le Rxjs, les signals, la gestion d'état, gérer les abonnements, les "side effect" ...
 
-## Code scaffolding
+3 - Car le point 2 est un très bon moyen de démontrer ses capacités.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Comment utiliser l'application en local ?
 
-```bash
-ng generate component component-name
-```
+Clôner le repos -> git clone "lien du repos"
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Installer les dépendances -> npm i 
 
-```bash
-ng generate --help
-```
+Lancer l'application -> ng s -o 
 
-## Building
+## Comment l'application fonctionne ?
 
-To build the project run:
+Une fois sur la page d'acceuil, vous pouvez choisir entre utiliser l'application en tant qu'utilisateur ou en tant qu'admin. 
+Faite votre choix et entrez un nom d'utilisateur et cliquez sur commencer.
 
-```bash
-ng build
-```
+## Application encore en cours de développement 
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Attention l'application n'est pas finie. 
 
-## Running unit tests
+Il reste la gestion des utilisateurs pour les admins et rendre responsives toutes l'application. Sans compter les nombreux bugs (que je n'ai pas encore remarqué 🙃) à régler.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
