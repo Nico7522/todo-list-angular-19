@@ -1,13 +1,29 @@
-import { Observable, of, shareReplay } from 'rxjs';
+import { Observable, of, shareReplay, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UsersProvider } from '../ports/users.provider';
 import { users } from '../../services/data';
 import { Injectable, signal } from '@angular/core';
+import { CustomError } from '../../models/custom-error.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
+  override edit(id: number, user: User): Observable<boolean> {
+    let index = users.findIndex((u) => u.id === id);
+    if (index !== -1) {
+      users[index] = { ...users[index], ...user };
+      return of(true);
+    }
+    return throwError(() => {
+      const error = new CustomError(
+        "Le nom d'utilisateur n'a pas pu être modifié",
+        { status: 400 }
+      );
+      return error;
+    });
+  }
+
   #currentUser = signal<User | null>(null);
   currentUser = this.#currentUser.asReadonly();
 

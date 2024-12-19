@@ -7,4 +7,5 @@ export abstract class UsersProvider {
   abstract createUser(username: string): void;
   abstract login(user: User): void;
   abstract logout(): void;
+  abstract edit(id: number, user: User): Observable<boolean>;
 }
