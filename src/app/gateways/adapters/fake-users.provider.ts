@@ -1,14 +1,31 @@
-import { Observable, of, shareReplay, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, shareReplay, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UsersProvider } from '../ports/users.provider';
 import { users } from '../../services/data';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
+  readonly #httpClient = inject(HttpClient);
+  users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+
+  override delete(id: number): Observable<boolean> {
+    let user = users.find((u) => u.id === id);
+    if (!user)
+      return throwError(() => {
+        const error = new CustomError('Utilisateur non trouvé', {
+          status: 404,
+        });
+        return error;
+      });
+    let newUserList = users.filter((u) => u.id !== id);
+    this.users$.next(newUserList);
+    return of(true);
+  }
   override edit(id: number, user: User): Observable<boolean> {
     let index = users.findIndex((u) => u.id === id);
     if (index !== -1) {
@@ -50,7 +67,8 @@ export class FakeUsersProvider extends UsersProvider {
     return user ? of(user) : of(null);
   }
   override getUsers(): Observable<User[]> {
-    return of(users);
+    this.users$.next(users);
+    return this.users$;
   }
 
   #role = signal<'admin' | 'user' | null>(null);

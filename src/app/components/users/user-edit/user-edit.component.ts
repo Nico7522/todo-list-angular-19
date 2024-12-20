@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input } from '@angular/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
@@ -19,6 +19,10 @@ export class UserEditComponent {
   readonly #messageService = inject(MessageService);
   destroyRef = inject(DestroyRef);
   id = input.required<number>();
+  sucessEdit = output<boolean>();
+  onSucessEdit() {
+    this.sucessEdit.emit(true);
+  }
   editForm = this.#formBuilder.group({
     username: ['', Validators.required],
   });
@@ -47,7 +51,6 @@ export class UserEditComponent {
           takeUntilDestroyed(this.destroyRef),
           catchError((err) => {
             console.log(err);
-
             this.#messageService.showMessage(err.message, 'error');
             return EMPTY;
           })
@@ -57,6 +60,7 @@ export class UserEditComponent {
             "Nom d'utilisateur édité avec succès",
             'success'
           );
+          this.onSucessEdit();
         });
     }
   }

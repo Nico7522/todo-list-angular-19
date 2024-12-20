@@ -49,7 +49,7 @@ export class FakeTasksProvider extends TasksProvider {
             })
           );
         }),
-        catchError(() => {
+        catchError((err) => {
           throw new CustomError("Erreur lors de l'upload de l'image", {
             status: 400,
           });
