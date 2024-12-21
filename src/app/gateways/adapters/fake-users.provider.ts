@@ -10,6 +10,16 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
+  override createUserAdmin(username: string): Observable<boolean> {
+    let user: User = {
+      id: users.length + 1,
+      username: username,
+    };
+    users.push(user);
+    this.users$.next(users);
+
+    return of(true);
+  }
   readonly #httpClient = inject(HttpClient);
   users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 

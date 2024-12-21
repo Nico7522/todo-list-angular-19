@@ -1,0 +1,14 @@
+<div class="w-96  py-5 px-10 ">
+    <div class="text-center">
+        <label for="username">Nom d'utilisateur</label>
+        <input id="username" type="text" [(ngModel)]="username"
+            class="w-full bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow">
+        <button [disabled]="username.length === 0" (click)="onSubmit()"
+            class="mt-2 inline m-auto rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button">
+            Créer
+        </button>
+        <button type="button" (click)="cancel()"
+            class="mt-2 ml-2 inline m-auto rounded-md bg-red-700 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg  focus:shadow-none  hover:bg-red-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">Annuler</button>
+    </div>
+</div>

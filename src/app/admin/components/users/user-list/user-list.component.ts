@@ -7,6 +7,7 @@ import { ConfirmationModalComponent } from '../../../../shared/confirmation-moda
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY } from 'rxjs';
 import { MessageService } from '../../../../services/message.service';
+import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 type Action = {
   show: boolean;
   id?: number;
@@ -20,7 +21,9 @@ type Action = {
     UserDetailsComponent,
     UserEditComponent,
     ConfirmationModalComponent,
+    CreateUserModalComponent,
   ],
+
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
@@ -67,5 +70,24 @@ export class UserListComponent {
     this.action.set({ show: false, action: null });
   }
 
-  showCreateForm() {}
+  showCreateForm() {
+    this.action.set({ show: true, action: 'create' });
+  }
+
+  onSubmit(username: string) {
+    this.#usersProvider
+      .createUserAdmin(username)
+      .pipe(
+        takeUntilDestroyed(this.#destroyRef),
+        catchError((err) => {
+          this.action.set({ show: false, action: null });
+          this.#messageService.showMessage(err.message, 'error');
+          return EMPTY;
+        })
+      )
+      .subscribe((_) => {
+        this.action.set({ show: false, action: null });
+        this.#messageService.showMessage('Utilisateur crée', 'success');
+      });
+  }
 }

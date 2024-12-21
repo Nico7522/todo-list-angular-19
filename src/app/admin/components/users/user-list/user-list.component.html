@@ -1,6 +1,6 @@
 @defer (hydrate on interaction) {
 <div class="flex w-full">
-    <button type="button" routerLink="/admin/user/create"
+    <button type="button" (click)="showCreateForm()"
         class="mr-20 mt-5 m-auto px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter
         un utilisateur</button>
 
@@ -59,6 +59,9 @@
     }
     @if (action().action === "delete") {
     <app-confirmation-modal (confirm)="onConfirm()" (cancel)="onCancel()" />
+    }
+    @if (action().action === "create") {
+    <app-create-user-modal (submit)="onSubmit($event)" (close)="onCancel()" />
     }
 
 </section>
