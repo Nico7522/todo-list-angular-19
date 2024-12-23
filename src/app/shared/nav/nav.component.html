@@ -1,10 +1,10 @@
-<nav class="flex items-center border-b-4 border-b-purple-700">
+<nav class="flex flex-col xl:flex-row items-center  border-b-4 border-b-purple-700 text-sm">
     <h1 routerLink="/" class="cursor-pointer text-start font-bold text-white text-4xl p-10"><img class="inline"
             src="favicon.ico" alt="">
         Angular v19 Test
     </h1>
     @if (currentUser()) {
-    <ul class="flex items-center justify-center gap-5 text-white">
+    <ul class="flex items-center justify-center m-auto xl:ml-1 xl:gap-5 gap-3 text-white">
         <li class=""><a routerLink="/">Home</a></li>
         <li><a routerLink="/task/list">Liste des tâches</a></li>
         <li><a routerLink="/task/my-tasks">Mes tâches</a></li>
@@ -16,7 +16,7 @@
     </ul>
     }
     @if (currentUser()) {
-    <div class="mr-2 m-auto flex items-center justify-center">
+    <div class="xl:mr-2 my-2 xl:my-0 m-auto flex items-center justify-center">
         <h4 class="text-white ">Bonjour {{currentUser()?.username}}</h4>
         <button (click)="onDisconnect()"
             class="rounded-md bg-default py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-onHover focus:shadow-none active:bg-onHover hover:bg-onHover active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"

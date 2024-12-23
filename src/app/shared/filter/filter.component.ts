@@ -4,7 +4,7 @@ import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 @Component({
   selector: 'app-filter',
   host: {
-    class: 'flex text-white items-center p-5 ml-16 gap-2',
+    class: '',
   },
   imports: [],
   templateUrl: './filter.component.html',

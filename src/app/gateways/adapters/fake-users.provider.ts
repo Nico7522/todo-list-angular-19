@@ -11,6 +11,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class FakeUsersProvider extends UsersProvider {
   override createUserAdmin(username: string): Observable<boolean> {
+    let existingUser = users.find((u) => u.username === username);
+    if (existingUser) {
+      return throwError(() => {
+        const error = new CustomError("Le nom d'utilisateur existe déjà", {
+          status: 400,
+        });
+        return error;
+      });
+    }
+
     let user: User = {
       id: users.length + 1,
       username: username,
