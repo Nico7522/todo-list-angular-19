@@ -1,5 +1,5 @@
 <form [formGroup]="taskForm" (ngSubmit)="onSubmit()"
-    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center">
+    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl md:w-[500px] py-5 items-center">
     <app-base-task-form controlKey="base" (imageChange)="handleImage($event)" />
 
     <button type="submit" [disabled]="!taskForm.valid"

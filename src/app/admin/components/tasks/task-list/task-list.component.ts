@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
 })
 export class TaskListComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
+  title = signal('');
+  status = signal<boolean | null>(null);
   search = signal('');
   startIndex = signal(0);
   endIndex = signal(21);
@@ -20,25 +22,27 @@ export class TaskListComponent {
     this.endIndex.update((index) => index + 21);
   }
   filterByTitle(value: string) {
-    this.search.set(value);
-    this.#tasksProvider.filterByTitle(value);
+    this.title.set(value);
   }
-
-  filteredTasks = computed(() =>
-    this.tasks()
-      ?.slice(this.startIndex(), this.endIndex())
-      .filter((t) =>
-        t.title.toLowerCase().includes(this.search().toLowerCase())
-      )
-  );
-
-  tasks = toSignal(this.#tasksProvider.filteredTasks$, {
-    initialValue: null,
-  });
 
   filterByStatus(completed: boolean | null) {
-    this.#tasksProvider.filterByStatus(completed);
+    this.status.set(completed);
   }
+
+  filteredTasks = computed(() => {
+    return this.tasks()
+      ?.slice(this.startIndex(), this.endIndex())
+      .filter((task) => {
+        return this.status() !== null
+          ? task.completed === this.status() &&
+              task.title.toLowerCase().includes(this.title().toLowerCase())
+          : task.title.toLowerCase().includes(this.title().toLowerCase());
+      });
+  });
+
+  tasks = toSignal(this.#tasksProvider.taskList$, {
+    initialValue: null,
+  });
 
   ngOnInit() {}
 }

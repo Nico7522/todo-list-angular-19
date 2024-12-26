@@ -1,5 +1,5 @@
 @defer (hydrate on interaction) {
-<app-filter />
+<app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)" />
 
 }
 <section class="flex flex-wrap justify-center gap-2 mt-5">

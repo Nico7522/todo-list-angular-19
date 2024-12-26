@@ -1,5 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
+import { Component, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-filter',
@@ -11,14 +10,13 @@ import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
   styleUrl: './filter.component.scss',
 })
 export class FilterComponent {
-  #tasksProvider = inject(FakeTasksProvider);
-  search = signal('');
-
+  title = signal('');
+  onTitleChange = output<string>();
+  onStatusChange = output<boolean | null>();
   filterByTitle(value: string) {
-    this.search.set(value);
-    this.#tasksProvider.filterByTitle(value);
+    this.onTitleChange.emit(value);
   }
   filterByStatus(completed: boolean | null) {
-    this.#tasksProvider.filterByStatus(completed);
+    this.onStatusChange.emit(completed);
   }
 }

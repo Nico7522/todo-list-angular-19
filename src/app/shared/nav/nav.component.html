@@ -1,10 +1,10 @@
-<nav class="flex flex-col xl:flex-row items-center  border-b-4 border-b-purple-700 text-sm">
-    <h1 routerLink="/" class="cursor-pointer text-start font-bold text-white text-4xl p-10"><img class="inline"
-            src="favicon.ico" alt="">
+<nav class="flex flex-col xl:flex-row items-center  border-b-4 border-b-purple-700 text-sm ">
+    <h1 routerLink="/" class="cursor-pointer text-start font-bold text-white text-2xl xl:text-4xl p-10"><img
+            class="inline" src="favicon.ico" alt="">
         Angular v19 Test
     </h1>
     @if (currentUser()) {
-    <ul class="flex items-center justify-center m-auto xl:ml-1 xl:gap-5 gap-3 text-white">
+    <ul class="p-2 xl:p-0 flex items-center justify-center m-auto xl:ml-1 xl:gap-5 gap-2 text-white text-center">
         <li class=""><a routerLink="/">Home</a></li>
         <li><a routerLink="/task/list">Liste des tâches</a></li>
         <li><a routerLink="/task/my-tasks">Mes tâches</a></li>

@@ -1,8 +1,10 @@
 import {
   BehaviorSubject,
   catchError,
+  concatMap,
   filter,
   map,
+  mergeMap,
   Observable,
   of,
   Subject,
@@ -30,7 +32,7 @@ export class FakeTasksProvider extends TasksProvider {
       .pipe(
         take(1),
         switchMap((res) => {
-          return this.taskList$.pipe(
+          return this.#taskList$.pipe(
             take(1),
             map((tasks) => {
               console.log(id);
@@ -57,7 +59,7 @@ export class FakeTasksProvider extends TasksProvider {
       );
   }
   override create(task: Task, formData: FormData): Observable<number> {
-    return this.taskList$.pipe(
+    return this.#taskList$.pipe(
       take(1),
       switchMap((tasks) => {
         return this.uploadImage(formData, task.id).pipe(
@@ -66,7 +68,7 @@ export class FakeTasksProvider extends TasksProvider {
             const previousLength = tasks.length;
             let newTaskList = [...tasks, { ...task, id: tasks.length + 1 }];
             if (previousLength < newTaskList.length) {
-              this.taskList$.next(newTaskList);
+              this.#taskList$.next(newTaskList);
               return newTaskList.length;
             } else {
               throw new CustomError(
@@ -84,7 +86,7 @@ export class FakeTasksProvider extends TasksProvider {
 
   override edit(id: number, task: Partial<Task>): Observable<boolean> {
     let newTasksList: Task[] = [];
-    return this.taskList$.pipe(
+    return this.#taskList$.pipe(
       take(1),
       map((tasks) => {
         let index = tasks.findIndex((t) => t.id === id);
@@ -100,13 +102,13 @@ export class FakeTasksProvider extends TasksProvider {
     );
   }
   override delete(id: number): Observable<boolean> {
-    return this.taskList$.pipe(
+    return this.#taskList$.pipe(
       take(1),
       map((tasks) => {
         const initialLength = tasks.length;
         const newTasksList = tasks.filter((task) => task.id !== id);
         if (newTasksList.length < initialLength) {
-          this.taskList$.next(newTasksList);
+          this.#taskList$.next(newTasksList);
           return true;
         } else {
           throw new CustomError("La tâche n'a pas pu être supprimée", {
@@ -118,7 +120,7 @@ export class FakeTasksProvider extends TasksProvider {
   }
 
   override getTasksByUserId(id: number): Observable<Task[]> {
-    return this.taskList$.pipe(
+    return this.#taskList$.pipe(
       filter((_) => id !== 0),
       map((tasks) => {
         tasks = tasks.filter((task) => task.userId === id);
@@ -126,7 +128,8 @@ export class FakeTasksProvider extends TasksProvider {
       })
     );
   }
-  taskList$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  #taskList$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  taskList$ = this.#taskList$.asObservable();
   getRandomTasks() {
     let todos: Task[] = [];
     let i = 0;
@@ -142,10 +145,10 @@ export class FakeTasksProvider extends TasksProvider {
       todos.push(todo);
       i++;
     }
-    this.taskList$.next(todos);
+    this.#taskList$.next(todos);
   }
   override getTask(id: string): Observable<Task> {
-    return this.taskList$.pipe(
+    return this.#taskList$.pipe(
       filter(() => id !== ''),
       map((tasks) => {
         let task = tasks.find((t) => t.id.toString() === id);
@@ -158,31 +161,4 @@ export class FakeTasksProvider extends TasksProvider {
       })
     );
   }
-
-  #filterByStatus = signal<boolean | null>(null);
-  filterByStatus(status: boolean | null) {
-    this.#filterByStatus.set(status);
-  }
-  #searchByTitle = signal('');
-  filterByTitle(value: string) {
-    this.#searchByTitle.set(value);
-  }
-
-  // Filter tasks by status. If null return all tasks.
-  filteredTasks$ = toObservable(this.#filterByStatus).pipe(
-    switchMap((value) => {
-      return this.taskList$.pipe(
-        map((tasks) => {
-          tasks = tasks.filter((t) => {
-            if (this.#filterByStatus() !== null) return t.completed === value;
-            return t;
-          });
-          tasks = tasks.filter((t) =>
-            t.title.toLowerCase().includes(this.#searchByTitle().toLowerCase())
-          );
-          return tasks;
-        })
-      );
-    })
-  );
 }
