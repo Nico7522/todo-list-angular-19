@@ -88,7 +88,7 @@ export class TaskFormComponent {
   }
 
   canQuit$: Subject<boolean> = new Subject();
-  isFormUntouched = signal(false);
+  isFormUntouched = signal(true);
   showModalConfirmation() {
     this.showModal.set(true);
   }
