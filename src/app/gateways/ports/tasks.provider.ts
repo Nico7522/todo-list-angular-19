@@ -9,4 +9,10 @@ export abstract class TasksProvider {
   abstract edit(id: number, task: Partial<Task>): Observable<boolean>;
   abstract create(task: Task, formData: FormData): Observable<number>;
   abstract uploadImage(formData: FormData, id: number): Observable<any>;
+  abstract filter(
+    title: string,
+    status: boolean | null,
+    startIndex: number,
+    endIndex: number
+  ): Observable<Task[]>;
 }

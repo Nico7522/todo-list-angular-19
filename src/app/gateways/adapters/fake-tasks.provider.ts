@@ -25,6 +25,25 @@ import { environment } from '../../../environments/environment.development';
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  override filter(
+    title: string,
+    status: boolean | null,
+    startIndex: number,
+    endIndex: number
+  ): Observable<Task[]> {
+    return this.#taskList$.pipe(
+      map((tasks) => {
+        tasks = tasks.slice(startIndex, endIndex).filter((task) => {
+          return status !== null
+            ? task.completed === status &&
+                task.title.toLowerCase().includes(title.toLowerCase())
+            : task.title.toLowerCase().includes(title.toLowerCase());
+        });
+
+        return tasks;
+      })
+    );
+  }
   readonly #httpClient = inject(HttpClient);
   override uploadImage(formData: FormData, id: number): Observable<any> {
     return this.#httpClient

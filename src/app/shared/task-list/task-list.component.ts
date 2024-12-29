@@ -1,14 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FilterComponent } from '../filter/filter.component';
 import { TaskComponent } from '../task/task.component';
 import { Router, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
+import { AsyncPipe } from '@angular/common';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-task-list',
-  imports: [FilterComponent, TaskComponent, RouterModule],
+  imports: [FilterComponent, TaskComponent, RouterModule, AsyncPipe],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
@@ -23,31 +25,44 @@ export class TaskListComponent {
   search = signal('');
   startIndex = signal(0);
   endIndex = signal(21);
+  filter = signal<{
+    title: string;
+    status: boolean | null;
+    startIndex: number;
+    endIndex: number;
+  }>({
+    title: '',
+    status: null,
+    startIndex: 0,
+    endIndex: 21,
+  });
   paginate() {
-    this.endIndex.update((index) => index + 21);
+    this.filter.update((prev) => {
+      return { ...prev, endIndex: prev.endIndex + 21 };
+    });
   }
   filterByTitle(value: string) {
-    this.title.set(value);
+    this.filter.update((prev) => {
+      return { ...prev, title: value };
+    });
   }
 
   filterByStatus(completed: boolean | null) {
-    this.status.set(completed);
+    this.filter.update((prev) => {
+      return { ...prev, status: completed };
+    });
   }
 
-  filteredTasks = computed(() => {
-    return this.tasks()
-      ?.slice(this.startIndex(), this.endIndex())
-      .filter((task) => {
-        return this.status() !== null
-          ? task.completed === this.status() &&
-              task.title.toLowerCase().includes(this.title().toLowerCase())
-          : task.title.toLowerCase().includes(this.title().toLowerCase());
-      });
-  });
-
-  tasks = toSignal(this.#tasksProvider.taskList$, {
-    initialValue: null,
-  });
+  tasks = toObservable(this.filter).pipe(
+    switchMap((_) => {
+      return this.#tasksProvider.filter(
+        this.filter().title,
+        this.filter().status,
+        this.filter().startIndex,
+        this.filter().endIndex
+      );
+    })
+  );
 
   ngOnInit() {}
 }

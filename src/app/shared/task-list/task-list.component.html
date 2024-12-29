@@ -12,7 +12,7 @@
 }
 <section class="flex flex-wrap justify-center gap-2 mt-5">
 
-    @for (task of filteredTasks(); track $index) {
+    @for (task of tasks | async ; track $index) {
     <app-task [task]="task"></app-task>
 
     }
