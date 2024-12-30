@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Task } from '../../models/task.model';
+import { Priority } from '../../enums/priority.enum';
 
 export abstract class TasksProvider {
   abstract getRandomTasks(): void;
@@ -12,6 +13,7 @@ export abstract class TasksProvider {
   abstract filter(
     title: string,
     status: boolean | null,
+    priority: Priority | null,
     startIndex: number,
     endIndex: number
   ): Observable<Task[]>;

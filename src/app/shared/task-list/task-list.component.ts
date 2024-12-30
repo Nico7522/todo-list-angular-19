@@ -7,6 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { map, switchMap } from 'rxjs';
+import { Priority } from '../../enums/priority.enum';
 
 @Component({
   selector: 'app-task-list',
@@ -30,11 +31,13 @@ export class TaskListComponent {
     status: boolean | null;
     startIndex: number;
     endIndex: number;
+    priority: Priority | null;
   }>({
     title: '',
     status: null,
     startIndex: 0,
     endIndex: 21,
+    priority: null,
   });
   paginate() {
     this.filter.update((prev) => {
@@ -53,11 +56,18 @@ export class TaskListComponent {
     });
   }
 
+  filterByPriority(priority: Priority | null) {
+    this.filter.update((prev) => {
+      return { ...prev, priority: priority };
+    });
+  }
+
   tasks = toObservable(this.filter).pipe(
     switchMap((_) => {
       return this.#tasksProvider.filter(
         this.filter().title,
         this.filter().status,
+        this.filter().priority,
         this.filter().startIndex,
         this.filter().endIndex
       );

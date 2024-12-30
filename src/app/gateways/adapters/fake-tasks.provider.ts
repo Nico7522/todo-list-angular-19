@@ -20,6 +20,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
+import { Priority } from '../../enums/priority.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class FakeTasksProvider extends TasksProvider {
   override filter(
     title: string,
     status: boolean | null,
+    priority: Priority | null,
     startIndex: number,
     endIndex: number
   ): Observable<Task[]> {
@@ -39,6 +41,10 @@ export class FakeTasksProvider extends TasksProvider {
                 task.title.toLowerCase().includes(title.toLowerCase())
             : task.title.toLowerCase().includes(title.toLowerCase());
         });
+
+        if (priority !== null) {
+          tasks = tasks.filter((t) => t.priority === priority);
+        }
 
         return tasks;
       })
