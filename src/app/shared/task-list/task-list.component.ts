@@ -6,7 +6,7 @@ import { TaskComponent } from '../task/task.component';
 import { Router, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { map, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
 import { Priority } from '../../enums/priority.enum';
 
 @Component({
@@ -63,6 +63,8 @@ export class TaskListComponent {
   }
 
   tasks = toObservable(this.filter).pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
     switchMap((_) => {
       return this.#tasksProvider.filter(
         this.filter().title,

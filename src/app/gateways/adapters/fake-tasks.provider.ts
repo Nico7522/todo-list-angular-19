@@ -1,26 +1,21 @@
 import {
   BehaviorSubject,
   catchError,
-  concatMap,
   filter,
   map,
-  mergeMap,
   Observable,
-  of,
-  Subject,
   switchMap,
   take,
-  tap,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
-import { completed, images, titles, users } from '../../services/data';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { completed, titles, users } from '../../services/data';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { Priority } from '../../enums/priority.enum';
+import { getAssociatedImage } from '../../helpers/functions';
 
 @Injectable({
   providedIn: 'root',
@@ -161,12 +156,12 @@ export class FakeTasksProvider extends TasksProvider {
     while (i < 100) {
       let todo: Task = {
         title: titles[Math.floor(Math.random() * titles.length)],
-        imgUrl: images[Math.floor(Math.random() * images.length)],
         priority: Math.floor(Math.random() * 3),
         userId: users[Math.floor(Math.random() * users.length)].id,
         id: i,
         completed: completed[Math.floor(Math.random() * completed.length)],
       };
+      todo.imgUrl = getAssociatedImage(todo.title);
       todos.push(todo);
       i++;
     }
