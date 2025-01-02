@@ -21,6 +21,8 @@ Faite votre choix et entrez un nom d'utilisateur et cliquez sur commencer.
 
 L'application a été mise en production mais certaines choses restent à régler. 
 
+Voici le lien : https://your-task-sigma.vercel.app/
+
 Liste des fonctionnalités à intégrer et fixer : 
 
 - L'upload et l'affichage d'image via l'API.
