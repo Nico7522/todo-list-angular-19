@@ -1,0 +1,24 @@
+<div class="text-center py-10 mx-20">
+    @if (user$ | async; as user) {
+
+    <h1 class="text-white text-xl">Nom d'utilisateur : {{user.username}}</h1>
+    <form [formGroup]="editForm" (submit)="onSubmit()">
+        <input formControlName="username"
+            class="w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+            placeholder="John Doe ...">
+        @if (this.editForm
+        .get('username')
+        ?.getError('required') &&
+        this.editForm.get('username')?.touched) {
+        <span class="text-red-600 block text-center">Champ requis</span>
+        }
+        <button [disabled]="!editForm.valid || !editForm.dirty"
+            class="mt-2 block m-auto rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-slate-800 transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="submit">
+            Éditer
+        </button>
+    </form>
+    } @else {
+    <span class="text-red-700 text-2xl">Utilisateur non trouvé</span>
+    }
+</div>

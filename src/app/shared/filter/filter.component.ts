@@ -1,24 +1,32 @@
-import { Component, inject, signal } from '@angular/core';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
+import { Component, output, signal } from '@angular/core';
+import { Priority } from '../../enums/priority.enum';
 
 @Component({
   selector: 'app-filter',
   host: {
-    class: 'flex text-white items-center p-5 ml-16 gap-2',
+    class: '',
   },
   imports: [],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
 })
 export class FilterComponent {
-  #tasksProvider = inject(FakeTasksProvider);
-  search = signal('');
-
+  title = signal('');
+  onTitleChange = output<string>();
+  onStatusChange = output<boolean | null>();
+  onPriorityChange = output<Priority | null>();
   filterByTitle(value: string) {
-    this.search.set(value);
-    this.#tasksProvider.filterByTitle(value);
+    this.onTitleChange.emit(value);
   }
   filterByStatus(completed: boolean | null) {
-    this.#tasksProvider.filterByStatus(completed);
+    this.onStatusChange.emit(completed);
+  }
+
+  filterByPriority(priority: string) {
+    if (+priority in Priority) {
+      this.onPriorityChange.emit(+priority);
+    } else {
+      this.onPriorityChange.emit(null);
+    }
   }
 }

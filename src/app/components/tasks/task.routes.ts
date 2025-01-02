@@ -1,9 +1,9 @@
 import { canQuitGuard } from '../../guards/can-quit.guard';
+import { TaskListComponent } from '../../shared/task-list/task-list.component';
 import { CreateTaskComponent } from './create-task/create-task.component';
 import { MyTasksComponent } from './my-tasks/my-tasks.component';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { TaskEditComponent } from './task-edit/task-edit.component';
-import { TaskListComponent } from './task-list/task-list.component';
 import { TasksComponent } from './tasks.component';
 import { Route } from '@angular/router';
 

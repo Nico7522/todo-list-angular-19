@@ -1,0 +1,25 @@
+@defer (hydrate on interaction) {
+<div class="flex w-full justify-center md:justify-start">
+    <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
+        (onPriorityChange)="filterByPriority($event)" />
+    @if (role() === "admin" && !onHomePage) {
+    <button type="button" routerLink="/admin/create"
+        class="mr-5 m-auto px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter
+        une tâche</button>
+
+    }
+
+</div>
+}
+<section class="flex flex-wrap justify-center gap-2 mt-5">
+
+    @for (task of tasks | async ; track $index) {
+    <app-task [task]="task"></app-task>
+
+    }
+</section>
+<button (click)="paginate()"
+    class="rounded-md block m-auto my-5 text-sm bg-select py-1 px-3 border border-transparent text-center  text-white transition-all shadow-md hover:shadow-lg focus:bg-onHover focus:shadow-none active:bg-onHover hover:bg-onHover active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+    type="button">
+    Voir plus
+</button>

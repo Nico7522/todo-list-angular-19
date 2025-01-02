@@ -4,6 +4,8 @@ const cors = require('cors')
 const path = require('path');
 const app = express();
 const PORT = 3000;
+app.use(cors())
+
 
 // Configuration de multer
 const storage = multer.diskStorage({
@@ -30,10 +32,10 @@ const upload = multer({
   },
 });
 
+
 // Middleware pour parser JSON (optionnel)
 app.use(express.json());
 app.use(express.static('public'));
-app.use(cors())
 
 
 // Route pour uploader une image
