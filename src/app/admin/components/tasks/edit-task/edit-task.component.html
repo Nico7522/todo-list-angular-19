@@ -1,5 +1,5 @@
 <form (ngSubmit)="onSubmit()"
-    class="mt-5 m-auto flex flex-col bg-default rounded-md shadow-xl w-[500px] py-5 items-center"
+    class="my-5 m-auto flex flex-col bg-default rounded-md shadow-xl md:w-[500px] py-5 items-center"
     [formGroup]="editForm">
     @if (taskId$ | async; as task) {
 

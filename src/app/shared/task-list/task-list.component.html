@@ -1,5 +1,5 @@
 @defer (hydrate on interaction) {
-<div class="flex w-full">
+<div class="flex w-full justify-center md:justify-start">
     <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
         (onPriorityChange)="filterByPriority($event)" />
     @if (role() === "admin" && !onHomePage) {
