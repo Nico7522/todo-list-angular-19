@@ -13,7 +13,7 @@ import {
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-task-details',

@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { PrioritySelectComponent } from '../priority-select/priority-select.component';
 import { Task } from '../../models/task.model';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-base-task-form',

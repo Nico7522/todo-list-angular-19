@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Priority } from '../../enums/priority.enum';
 import { PriorityComponent } from '../priority/priority.component';
 import { EditComponent } from '../edit/edit.component';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-task',
