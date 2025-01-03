@@ -2,15 +2,7 @@
 
 Petite application de gestion de tâches mettant en pratique les nouveautés d'Angular 19.
 
-Cette application utilise une petite API uniquement pour gérer les images. Le reste ce déroule uniquement côté front-end. 
-
-Pourquoi ?
-
-1 - Le but est de me concentrer uniquement sur le front, et donc "perdre du temps" à développer une partie back n'est pas mon objectif.
-
-2 - En devant développer ce qui ce fait en back-end, côté front-end, cela me force à mettre énormément de chose en pratique comme le Rxjs, les signals, la gestion d'état, gérer les abonnements, les "side effect" ...
-
-3 - Car le point 2 est un très bon moyen de démontrer ses capacités.
+Cette application utilise une petite API uniquement pour gérer les images.
 
 ## Comment utiliser l'application en local ?
 
@@ -25,9 +17,17 @@ Lancer l'application -> ng s -o
 Une fois sur la page d'acceuil, vous pouvez choisir entre utiliser l'application en tant qu'utilisateur ou en tant qu'admin. 
 Faite votre choix et entrez un nom d'utilisateur et cliquez sur commencer.
 
-## Application encore en cours de développement 
+## L'application est en production mais ... 
 
-Attention l'application n'est pas finie. 
+L'application a été mise en production mais certaines choses restent à régler. 
 
-Il reste la gestion des utilisateurs pour les admins et rendre responsives toutes l'application. Sans compter les nombreux bugs (que je n'ai pas encore remarqué 🙃) à régler.
+Voici le lien : https://your-task-sigma.vercel.app/
+
+Liste des fonctionnalités à intégrer et fixer : 
+
+- L'upload et l'affichage d'image via l'API.
+- Fitre par utilisteur pour les admins.
+- Ajouter des dates de création et de complétion.
+- Trier par date quand ces dernières seront disponibles.
+- Renvoyer TOUTES les données via l'API.
 
