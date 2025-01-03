@@ -13,7 +13,7 @@ import { completed, titles, users } from '../../services/data';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.development';
 import { Priority } from '../../enums/priority.enum';
 import { getAssociatedImage } from '../../helpers/functions';
 
