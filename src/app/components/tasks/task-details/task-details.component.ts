@@ -13,11 +13,12 @@ import {
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment.development';
+import { CheckDateFormatPipe } from '../../../pipes/check-date-format.pipe';
 
 @Component({
   selector: 'app-task-details',
-  imports: [AsyncPipe, PriorityComponent],
+  imports: [AsyncPipe, PriorityComponent, CheckDateFormatPipe],
   templateUrl: './task-details.component.html',
   styleUrl: './task-details.component.scss',
 })

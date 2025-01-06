@@ -4,6 +4,10 @@
     <img [src]="imgUrl + '/' + task.imgUrl" class="w-96 mb-5" alt="" />
     <p class="inline text-xl">Tâche de priorité :</p>
     <app-priority [priority]="task.priority" />
+    <p class="my-5">Ajoutée le {{task.creationDate | checkDateFormat}}</p>
+    @if (task.completed && task.closingDate) {
+    <p class="my-5">Clôturé le {{task.closingDate | checkDateFormat}} </p>
+    }
     <p [class.text-green-500]="task.completed" [class.text-red-500]="!task.completed" class="text-xl mt-5">
         {{ task.completed ? "Terminée" : "En cours" }}
     </p>

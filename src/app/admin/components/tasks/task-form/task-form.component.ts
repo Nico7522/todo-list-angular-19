@@ -55,6 +55,7 @@ export class TaskFormComponent {
           priority: +priority,
           completed: false,
           userId: userId ? +userId : null,
+          creationDate: new Date(),
         };
 
         this.#tasksProvider

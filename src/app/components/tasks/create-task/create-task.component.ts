@@ -59,6 +59,7 @@ export class CreateTaskComponent {
           priority: +priority,
           completed: false,
           userId: this.userId,
+          creationDate: new Date(),
         };
 
         this.#tasksProvider
@@ -66,6 +67,7 @@ export class CreateTaskComponent {
           .pipe(
             takeUntilDestroyed(this.destroyRef),
             catchError((e) => {
+              console.log(e);
               this.#messageService.showMessage(
                 'Une erreur est survenue.',
                 'error'

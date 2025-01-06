@@ -40,6 +40,7 @@ export class EditTaskComponent {
   showModal = signal(false);
   assignUser = signal(false);
   formData = signal<FormData>(new FormData());
+  isClosingDateExist = signal(false);
   handleImage(formData: FormData) {
     this.formData.set(formData);
   }
@@ -67,7 +68,7 @@ export class EditTaskComponent {
     const userId = this.editForm.get('user')?.value;
     let completed = this.editForm.get('status')?.value === 'true';
     if (title && (priority || priority === 0)) {
-      let task: Task = {
+      let task: Partial<Task> = {
         id: +this.id(),
         title: title,
         priority: +priority,
@@ -75,6 +76,14 @@ export class EditTaskComponent {
         userId: null,
       };
       if (userId) task.userId = +userId;
+
+      if (task.completed && !this.isClosingDateExist()) {
+        task.closingDate = new Date();
+      }
+
+      if (!task.completed && this.isClosingDateExist()) {
+        task.closingDate = null;
+      }
 
       this.#tasksProvider
         .edit(+this.id(), task as Partial<Task>)

@@ -4,13 +4,13 @@
         <div class="flex gap-10 justify-center mt-5">
             <div class="inline-flex items-center">
                 <input (change)="onRoleChange('admin')" id="admin" type="radio" value="admin" name="role"
-                    class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    class="peer h-5 w-5 text-purple-700 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all">
                 <label for="admin" class="ms-2 text-sm font-medium text-white">Admin</label>
             </div>
 
             <div class="inline-flex items-center">
                 <input (change)="onRoleChange('user')" id="user" type="radio" value="user" name="role"
-                    class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    class="peer h-5 w-5 text-purple-700 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all">
                 <label for="user" class="ms-2 text-sm font-medium text-white">Utilisateur</label>
             </div>
         </div>

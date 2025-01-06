@@ -22,3 +22,16 @@ export function getAssociatedImage(title: string) {
 
   return imgUrl;
 }
+
+export function generateRandomDate(): Date {
+  let month = Math.floor(Math.random() * 13);
+  let day = Math.floor(Math.random() * 31);
+  let year = Math.floor(Math.random() * (2024 - 2000)) + 2000;
+  let date = new Date(year, month, day);
+
+  return date;
+}
+
+export function returnDateToString(date: string | Date): string {
+  return typeof date === 'string' ? date : date.toLocaleDateString();
+}

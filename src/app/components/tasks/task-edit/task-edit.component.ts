@@ -57,7 +57,7 @@ export class TaskEditComponent {
   readonly #router = inject(Router);
   destroyRef = inject(DestroyRef);
   showModal = signal(false);
-
+  isClosingDateExist = signal(false);
   user = this.#usersProvider.currentUser;
 
   id = input.required<string>();
@@ -68,6 +68,8 @@ export class TaskEditComponent {
           this.editForm
             .get('status')
             ?.patchValue(task.completed ? 'true' : 'false');
+
+          this.isClosingDateExist.set(task.completed);
           return task;
         })
       );
@@ -85,13 +87,21 @@ export class TaskEditComponent {
     const image = this.editForm.get('base.image')?.value;
     let completed = this.editForm.get('status')?.value === 'true';
     if (title && (priority || priority === 0)) {
-      let task: Task = {
+      let task: Partial<Task> = {
         id: +this.id(),
         title: title,
         priority: +priority,
         completed: completed,
         userId: this.user()?.id || null,
       };
+
+      if (task.completed && !this.isClosingDateExist()) {
+        task.closingDate = new Date();
+      }
+
+      if (!task.completed && this.isClosingDateExist()) {
+        task.closingDate = null;
+      }
 
       this.#tasksProvider
         .edit(+this.id(), task as Partial<Task>)

@@ -7,4 +7,6 @@ export interface Task {
   completed: boolean;
   priority: Priority;
   imgUrl?: string;
+  creationDate: Date;
+  closingDate?: Date | null;
 }

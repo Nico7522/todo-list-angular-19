@@ -15,7 +15,10 @@ import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { Priority } from '../../enums/priority.enum';
-import { getAssociatedImage } from '../../helpers/functions';
+import {
+  generateRandomDate,
+  getAssociatedImage,
+} from '../../helpers/functions';
 
 @Injectable({
   providedIn: 'root',
@@ -55,8 +58,6 @@ export class FakeTasksProvider extends TasksProvider {
           return this.#taskList$.pipe(
             take(1),
             map((tasks) => {
-              console.log(id);
-
               let index = tasks.findIndex((t) => t.id === id);
               if (index !== -1) {
                 tasks[index] = { ...tasks[index], imgUrl: res.file.filename };
@@ -160,8 +161,12 @@ export class FakeTasksProvider extends TasksProvider {
         userId: users[Math.floor(Math.random() * users.length)].id,
         id: i,
         completed: completed[Math.floor(Math.random() * completed.length)],
+        creationDate: generateRandomDate(),
       };
       todo.imgUrl = getAssociatedImage(todo.title);
+      if (todo.completed) {
+        todo.closingDate = new Date();
+      }
       todos.push(todo);
       i++;
     }

@@ -11,7 +11,10 @@ import {
 } from '@angular/forms';
 import { PrioritySelectComponent } from '../priority-select/priority-select.component';
 import { Task } from '../../models/task.model';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.development';
+// @ts-ignore
+import Datepicker from 'flowbite-datepicker/Datepicker';
+import { returnDateToString } from '../../helpers/functions';
 
 @Component({
   selector: 'app-base-task-form',
@@ -40,6 +43,13 @@ export class BaseTaskFormComponent {
   }
 
   ngOnInit() {
+    const dateInput = document.getElementById('datepicker');
+    if (dateInput) {
+      new Datepicker(dateInput, {
+        autohide: true,
+        format: 'dd/mm/yyyy',
+      });
+    }
     this.parentFormGroup.addControl(
       this.controlKey,
       new FormGroup({
@@ -55,6 +65,10 @@ export class BaseTaskFormComponent {
           nonNullable: true,
           validators: [Validators.required],
         }),
+        // creationDate: new FormControl(null, {
+        //   nonNullable: true,
+        //   validators: [Validators.required],
+        // }),
       })
     );
     if (this.task) {
@@ -62,6 +76,9 @@ export class BaseTaskFormComponent {
       this.parentFormGroup
         .get('base.priorities')
         ?.patchValue(this.task.priority);
+      // this.parentFormGroup
+      //   .get('base.creationDate')
+      //   ?.patchValue(returnDateToString(this.task.creationDate));
     }
   }
 
@@ -95,10 +112,4 @@ export class BaseTaskFormComponent {
       this.imageChange.emit(formData);
     }
   }
-
-  // ngAfterViewInit() {
-  //   if (this.task) {
-  //     this.parentFormGroup.get('title')?.patchValue(this.task.title);
-  //   }
-  // }
 }
