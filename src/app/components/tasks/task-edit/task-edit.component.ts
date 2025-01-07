@@ -103,6 +103,7 @@ export class TaskEditComponent {
         task.closingDate = null;
       }
 
+      this.#messageService.showLoader();
       this.#tasksProvider
         .edit(+this.id(), task as Partial<Task>)
         .pipe(
@@ -125,6 +126,7 @@ export class TaskEditComponent {
             } else {
               this.#messageService.showMessage(err.message, 'error');
             }
+            this.#messageService.hideLoader();
             return EMPTY;
           })
         )
@@ -133,6 +135,7 @@ export class TaskEditComponent {
             'La tâche éditée avec succès.',
             'success'
           );
+          this.#messageService.hideLoader();
           if (response) {
             // Set to true to not trigger the confirmation modal and bypass the modal.
             this.isFormUntouched.set(true);

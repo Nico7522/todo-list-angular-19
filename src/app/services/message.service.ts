@@ -1,5 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Message } from '../models/message.model';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ import { Message } from '../models/message.model';
 export class MessageService {
   #messages = signal<Message[]>([]);
   messages = this.#messages.asReadonly();
-
+  #spinnerService = inject(NgxSpinnerService);
   showMessage(message: string, response: 'error' | 'success') {
     this.#messages.update((prev) => [
       ...prev,
@@ -21,6 +22,14 @@ export class MessageService {
 
   hideMessage() {
     this.#messages.update((prev) => (prev.pop() ? prev : []));
+  }
+
+  showLoader() {
+    this.#spinnerService.show();
+  }
+
+  hideLoader() {
+    this.#spinnerService.hide();
   }
   constructor() {}
 }

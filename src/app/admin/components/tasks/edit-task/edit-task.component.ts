@@ -84,7 +84,7 @@ export class EditTaskComponent {
       if (!task.completed && this.isClosingDateExist()) {
         task.closingDate = null;
       }
-
+      this.#messageService.showLoader();
       this.#tasksProvider
         .edit(+this.id(), task as Partial<Task>)
         .pipe(
@@ -107,6 +107,7 @@ export class EditTaskComponent {
             } else {
               this.#messageService.showMessage(err.message, 'error');
             }
+            this.#messageService.hideLoader();
             return EMPTY;
           })
         )
@@ -115,6 +116,7 @@ export class EditTaskComponent {
             'La tâche éditée avec succès.',
             'success'
           );
+          this.#messageService.hideLoader();
           if (response) {
             // Set to true to not trigger the confirmation modal and bypass the modal.
             this.isFormUntouched.set(true);

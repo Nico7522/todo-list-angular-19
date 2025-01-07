@@ -65,10 +65,6 @@ export class BaseTaskFormComponent {
           nonNullable: true,
           validators: [Validators.required],
         }),
-        // creationDate: new FormControl(null, {
-        //   nonNullable: true,
-        //   validators: [Validators.required],
-        // }),
       })
     );
     if (this.task) {
@@ -76,9 +72,6 @@ export class BaseTaskFormComponent {
       this.parentFormGroup
         .get('base.priorities')
         ?.patchValue(this.task.priority);
-      // this.parentFormGroup
-      //   .get('base.creationDate')
-      //   ?.patchValue(returnDateToString(this.task.creationDate));
     }
   }
 

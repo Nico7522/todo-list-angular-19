@@ -50,6 +50,8 @@ export class UserListComponent {
   }
 
   onConfirm() {
+    this.#messageService.showLoader();
+
     this.#usersProvider
       .delete(this.action().id!)
       .pipe(
@@ -57,12 +59,15 @@ export class UserListComponent {
         catchError((err) => {
           this.action.set({ show: false, action: null });
           this.#messageService.showMessage(err.message, 'error');
+          this.#messageService.hideLoader();
+
           return EMPTY;
         })
       )
       .subscribe((_) => {
         this.action.set({ show: false, action: null });
         this.#messageService.showMessage('Utilisateur supprimé', 'success');
+        this.#messageService.hideLoader();
       });
   }
 
@@ -75,6 +80,8 @@ export class UserListComponent {
   }
 
   onSubmit(username: string) {
+    this.#messageService.showLoader();
+
     this.#usersProvider
       .createUserAdmin(username)
       .pipe(
@@ -82,12 +89,15 @@ export class UserListComponent {
         catchError((err) => {
           this.action.set({ show: false, action: null });
           this.#messageService.showMessage(err.message, 'error');
+          this.#messageService.hideLoader();
+
           return EMPTY;
         })
       )
       .subscribe((_) => {
         this.action.set({ show: false, action: null });
         this.#messageService.showMessage('Utilisateur crée', 'success');
+        this.#messageService.hideLoader();
       });
   }
 }

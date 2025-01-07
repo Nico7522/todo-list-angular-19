@@ -30,9 +30,10 @@ export class FakeTasksProvider extends TasksProvider {
     priority: Priority | null,
     startIndex: number,
     endIndex: number
-  ): Observable<Task[]> {
+  ): Observable<{ tasks: Task[]; isLastPage: boolean }> {
     return this.#taskList$.pipe(
       map((tasks) => {
+        const totalLength = tasks.length;
         tasks = tasks.slice(startIndex, endIndex).filter((task) => {
           return status !== null
             ? task.completed === status &&
@@ -44,7 +45,7 @@ export class FakeTasksProvider extends TasksProvider {
           tasks = tasks.filter((t) => t.priority === priority);
         }
 
-        return tasks;
+        return { tasks: tasks, isLastPage: totalLength === tasks.length };
       })
     );
   }

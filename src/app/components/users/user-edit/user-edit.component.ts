@@ -45,6 +45,8 @@ export class UserEditComponent {
         id: this.id(),
         username: username,
       };
+      this.#messageService.showLoader();
+
       this.#usersProvider
         .edit(this.id(), user)
         .pipe(
@@ -52,6 +54,8 @@ export class UserEditComponent {
           catchError((err) => {
             console.log(err);
             this.#messageService.showMessage(err.message, 'error');
+            this.#messageService.hideLoader();
+
             return EMPTY;
           })
         )
@@ -60,6 +64,7 @@ export class UserEditComponent {
             "Nom d'utilisateur édité avec succès",
             'success'
           );
+          this.#messageService.hideLoader();
           this.onSucessEdit();
         });
     }

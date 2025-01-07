@@ -21,9 +21,11 @@ import { TasksProvider } from './gateways/ports/tasks.provider';
 import { FakeTasksProvider } from './gateways/adapters/fake-tasks.provider';
 import { UsersProvider } from './gateways/ports/users.provider';
 import { FakeUsersProvider } from './gateways/adapters/fake-users.provider';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    importProvidersFrom(BrowserAnimationsModule),
     provideHttpClient(withFetch()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),

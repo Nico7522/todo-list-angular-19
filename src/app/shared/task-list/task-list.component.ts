@@ -6,7 +6,14 @@ import { TaskComponent } from '../task/task.component';
 import { Router, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Priority } from '../../enums/priority.enum';
 
 @Component({
@@ -26,6 +33,8 @@ export class TaskListComponent {
   search = signal('');
   startIndex = signal(0);
   endIndex = signal(21);
+
+  isLastPage = signal(false);
   filter = signal<{
     title: string;
     status: boolean | null;
@@ -66,6 +75,8 @@ export class TaskListComponent {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((_) => {
+      console.log('appelle');
+
       return this.#tasksProvider.filter(
         this.filter().title,
         this.filter().status,
@@ -73,7 +84,8 @@ export class TaskListComponent {
         this.filter().startIndex,
         this.filter().endIndex
       );
-    })
+    }),
+    shareReplay()
   );
 
   ngOnInit() {}

@@ -12,6 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [canNavigateGuard],
     loadChildren: () => import('./admin/components/admin.routes'),
   },
 ];

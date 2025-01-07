@@ -57,7 +57,7 @@ export class TaskFormComponent {
           userId: userId ? +userId : null,
           creationDate: new Date(),
         };
-
+        this.#messageService.showLoader();
         this.#tasksProvider
           .create(task, this.formData())
           .pipe(
@@ -67,6 +67,7 @@ export class TaskFormComponent {
                 'Une erreur est survenue.',
                 'error'
               );
+              this.#messageService.hideLoader();
               return EMPTY;
             })
           )
@@ -77,6 +78,7 @@ export class TaskFormComponent {
                 'La tâche a été crée.',
                 'success'
               );
+              this.#messageService.hideLoader();
               this.#router.navigate(['/task', taskId]);
             },
           });

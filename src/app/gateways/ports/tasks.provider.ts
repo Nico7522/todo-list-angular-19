@@ -16,5 +16,5 @@ export abstract class TasksProvider {
     priority: Priority | null,
     startIndex: number,
     endIndex: number
-  ): Observable<Task[]>;
+  ): Observable<{ tasks: Task[]; isLastPage: boolean }>;
 }
