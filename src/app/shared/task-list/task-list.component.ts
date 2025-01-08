@@ -33,7 +33,8 @@ export class TaskListComponent {
   search = signal('');
   startIndex = signal(0);
   endIndex = signal(21);
-
+  isFilterOpen = signal(false);
+  showFilter = signal(false);
   isLastPage = signal(false);
   filter = signal<{
     title: string;
@@ -41,13 +42,16 @@ export class TaskListComponent {
     startIndex: number;
     endIndex: number;
     priority: Priority | null;
+    creationDate: Date | null;
   }>({
     title: '',
     status: null,
     startIndex: 0,
     endIndex: 21,
     priority: null,
+    creationDate: null,
   });
+  body = document.querySelector('body') as HTMLBodyElement;
   paginate() {
     this.filter.update((prev) => {
       return { ...prev, endIndex: prev.endIndex + 21 };
@@ -71,16 +75,24 @@ export class TaskListComponent {
     });
   }
 
+  filterByCreationDate(date: string) {
+    let splitdDate = date.split('/');
+    let stringDate = `${splitdDate[1]}/${splitdDate[0]}/${splitdDate[2]}`;
+    let formatedDate = new Date(stringDate);
+    this.filter.update((prev) => {
+      return { ...prev, creationDate: formatedDate };
+    });
+  }
+
   tasks = toObservable(this.filter).pipe(
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((_) => {
-      console.log('appelle');
-
       return this.#tasksProvider.filter(
         this.filter().title,
         this.filter().status,
         this.filter().priority,
+        this.filter().creationDate,
         this.filter().startIndex,
         this.filter().endIndex
       );
@@ -88,5 +100,15 @@ export class TaskListComponent {
     shareReplay()
   );
 
+  openFilter() {
+    this.isFilterOpen.set(true);
+    this.showFilter.set(true);
+    this.body.classList.add('overflow-hidden');
+  }
+
+  onCloseFilter() {
+    this.showFilter.set(false);
+    this.body.classList.remove('overflow-hidden');
+  }
   ngOnInit() {}
 }

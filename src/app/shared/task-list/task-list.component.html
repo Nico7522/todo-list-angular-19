@@ -1,7 +1,18 @@
 @defer (hydrate on interaction) {
+<button type="button" (click)="openFilter()"
+    class="m-2 px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ouvrir
+    le filtre</button>
 <div class="flex w-full justify-center md:justify-start">
-    <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
-        (onPriorityChange)="filterByPriority($event)" />
+    <div
+        class="{{isFilterOpen() && showFilter() ? 'opacity-100' : 'opacity-0 -z-10'}} transition ease-in-out duration-300">
+        @if (isFilterOpen()) {
+        <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
+            (onPriorityChange)="filterByPriority($event)" (onCloseFilter)="onCloseFilter()"
+            (onCreationDateChange)="filterByCreationDate($event)" />
+
+        }
+
+    </div>
     @if (role() === "admin" && !onHomePage) {
     <button type="button" routerLink="/admin/create"
         class="mr-5 m-auto px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter

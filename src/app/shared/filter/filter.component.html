@@ -1,20 +1,61 @@
-<div class="flex text-white items-center p-5 xl:ml-16 gap-2 flex-col md:flex-row">
+<div class="fixed
+inset-0
+left-0
+top-0
+md:h-96
+md:w-96
+m-auto
+shadow-xl
+modal-animation
 
-    <button data-ripple-dark="true" (click)="filterByStatus(true)" class="py-1 px-3 rounded-xl bg-green-500 ">Terminée
-        ?</button>
-    <button (click)="filterByStatus(false)" class="py-1 px-3 rounded-xl bg-red-500 ">En cours ?</button>
-    <button (click)="filterByStatus(null)" class="py-1 px-3 rounded-xl bg-blue-500">Toutes</button>
-    <select #priority (change)="filterByPriority(priority.value)" id="countries"
-        class=" border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 bg-default dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option selected>Choisir une priorité</option>
-        <option value="all">Toute</option>
-        <option value="0">Basse</option>
-        <option value="1">Moyenne</option>
-        <option value="2">Haute</option>
+overflow-hidden
+z-10 bg-default rounded-md">
+    <div class=" mt-1 text-right border-b border-b-purple-700 pb-1">
+        <button type="button" (click)="closeFilter()"
+            class="bg-white rounded-md p-2 mr-1 inline-flex items-center justify-center text-black hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+            <span class="sr-only text-xl">Close menu</span>
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-    </select>
-    <input #searchInput (input)="filterByTitle(searchInput.value)"
-        class="bg-default focus:ring-2 focus:ring-gray-800 focus:outline-none text-white  rounded-lg p-1" type="search"
-        placeholder="Ranger la chambre ...">
+    </div>
+    <div class="flex flex-col text-white items-center  gap-2 mt-3">
+
+        <button data-ripple-dark="true" (click)="filterByStatus(true)"
+            class="py-1 px-3 rounded-xl bg-green-500 ">Terminée
+            ?</button>
+        <button (click)="filterByStatus(false)" class="py-1 px-3 rounded-xl bg-red-500 ">En cours ?</button>
+        <button (click)="filterByStatus(null)" class="py-1 px-3 rounded-xl bg-blue-500">Toutes</button>
+        <select #priority (change)="filterByPriority(priority.value)" id="countries"
+            class=" border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 bg-default dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected>Choisir une priorité</option>
+            <option value="all">Toute</option>
+            <option value="0">Basse</option>
+            <option value="1">Moyenne</option>
+            <option value="2">Haute</option>
+
+        </select>
+        <input #searchInput (input)="filterByTitle(searchInput.value)"
+            class="bg-default focus:ring-2 focus:ring-gray-800 focus:outline-none text-white  rounded-lg p-1"
+            type="search" placeholder="Ranger la chambre ...">
+
+    </div>
+
+    <label class="flex items-center justify-center p-2" for="datepicker">Ajouté après le </label>
+    <div class="relative mx-10">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+            </svg>
+        </div>
+        <input #creationDate (changeDate)="filterByCreationDate(creationDate.value)" datepicker id="datepicker"
+            type="text"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Date">
+    </div>
 
 </div>
