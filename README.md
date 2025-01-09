@@ -25,9 +25,7 @@ Voici le lien : https://your-task-sigma.vercel.app/
 
 Liste des fonctionnalités à intégrer et fixer : 
 
-- L'upload et l'affichage d'image via l'API.
+- Quand on navigue sur la page détails d'une tâche et que l'on revient en arrière, faire en sorte de sauvegarder le filtre.
 - Fitre par utilisteur pour les admins.
-- Ajouter des dates de création et de complétion.
-- Trier par date quand ces dernières seront disponibles.
 - Renvoyer TOUTES les données via l'API.
 
