@@ -29,13 +29,12 @@ export class FakeTasksProvider extends TasksProvider {
     status: boolean | null,
     priority: Priority | null,
     creationDate: Date | null,
+    closingDate: Date | null,
     startIndex: number,
     endIndex: number
   ): Observable<{ tasks: Task[]; isLastPage: boolean }> {
     return this.#taskList$.pipe(
       map((tasks) => {
-        console.log(creationDate);
-
         const totalLength = tasks.length;
         tasks = tasks.slice(startIndex, endIndex).filter((task) => {
           return status !== null
@@ -50,6 +49,12 @@ export class FakeTasksProvider extends TasksProvider {
 
         if (creationDate !== null) {
           tasks = tasks.filter((t) => t.creationDate >= creationDate);
+        }
+
+        if (closingDate !== null) {
+          tasks = tasks.filter((t) =>
+            t.closingDate ? t.closingDate <= closingDate : null
+          );
         }
 
         return { tasks: tasks, isLastPage: totalLength === tasks.length };

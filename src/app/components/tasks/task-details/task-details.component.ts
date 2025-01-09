@@ -1,15 +1,7 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { Component, inject, input, signal } from '@angular/core';
+import { AsyncPipe, Location } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  catchError,
-  EMPTY,
-  filter,
-  map,
-  of,
-  shareReplay,
-  switchMap,
-} from 'rxjs';
+import { catchError, EMPTY, filter, of, shareReplay, switchMap } from 'rxjs';
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
@@ -25,6 +17,7 @@ import { CheckDateFormatPipe } from '../../../pipes/check-date-format.pipe';
 export class TaskDetailsComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #location = inject(Location);
   readonly id = input<string>('');
   imgUrl = environment.IMG_URL;
   priorityColorClass = signal('');
@@ -46,6 +39,10 @@ export class TaskDetailsComponent {
       return of(null);
     })
   );
+
+  back() {
+    this.#location.back();
+  }
 
   ngOnInit() {}
 }

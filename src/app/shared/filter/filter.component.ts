@@ -17,7 +17,11 @@ export class FilterComponent {
   onStatusChange = output<boolean | null>();
   onPriorityChange = output<Priority | null>();
   onCreationDateChange = output<string>();
+  onClosingDateChange = output<string>();
+
   onCloseFilter = output();
+
+  selectedStatus = signal<boolean | null>(null);
 
   closeFilter() {
     this.onCloseFilter.emit();
@@ -28,6 +32,7 @@ export class FilterComponent {
   }
   filterByStatus(completed: boolean | null) {
     this.onStatusChange.emit(completed);
+    this.selectedStatus.set(completed);
   }
 
   filterByPriority(priority: string) {
@@ -42,10 +47,22 @@ export class FilterComponent {
     this.onCreationDateChange.emit(date);
   }
 
+  filterByClosingDate(date: string) {
+    this.onClosingDateChange.emit(date);
+  }
+
   ngOnInit() {
-    const dateInput = document.getElementById('datepicker');
-    if (dateInput) {
-      new Datepicker(dateInput, {
+    const creationDateInput = document.getElementById('creationDatePicker');
+    if (creationDateInput) {
+      new Datepicker(creationDateInput, {
+        autohide: true,
+        format: 'dd/mm/yyyy',
+      });
+    }
+
+    const closingDateInput = document.getElementById('closingDatePicker');
+    if (closingDateInput) {
+      new Datepicker(closingDateInput, {
         autohide: true,
         format: 'dd/mm/yyyy',
       });

@@ -8,7 +8,7 @@
         @if (isFilterOpen()) {
         <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
             (onPriorityChange)="filterByPriority($event)" (onCloseFilter)="onCloseFilter()"
-            (onCreationDateChange)="filterByCreationDate($event)" />
+            (onCreationDateChange)="filterByCreationDate($event)" (onClosingDateChange)="filterByClosingDate($event)" />
 
         }
 

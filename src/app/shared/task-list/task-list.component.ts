@@ -43,6 +43,7 @@ export class TaskListComponent {
     endIndex: number;
     priority: Priority | null;
     creationDate: Date | null;
+    closingDate: Date | null;
   }>({
     title: '',
     status: null,
@@ -50,6 +51,7 @@ export class TaskListComponent {
     endIndex: 21,
     priority: null,
     creationDate: null,
+    closingDate: null,
   });
   body = document.querySelector('body') as HTMLBodyElement;
   paginate() {
@@ -84,6 +86,15 @@ export class TaskListComponent {
     });
   }
 
+  filterByClosingDate(date: string) {
+    let splitdDate = date.split('/');
+    let stringDate = `${splitdDate[1]}/${splitdDate[0]}/${splitdDate[2]}`;
+    let formatedDate = new Date(stringDate);
+    this.filter.update((prev) => {
+      return { ...prev, closingDate: formatedDate };
+    });
+  }
+
   tasks = toObservable(this.filter).pipe(
     debounceTime(300),
     distinctUntilChanged(),
@@ -93,6 +104,7 @@ export class TaskListComponent {
         this.filter().status,
         this.filter().priority,
         this.filter().creationDate,
+        this.filter().closingDate,
         this.filter().startIndex,
         this.filter().endIndex
       );
