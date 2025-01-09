@@ -35,3 +35,9 @@ export function generateRandomDate(): Date {
 export function returnDateToString(date: string | Date): string {
   return typeof date === 'string' ? date : date.toLocaleDateString();
 }
+
+export function formateDate(date: string): Date {
+  let splitdDate = date.split('/');
+  let stringDate = `${splitdDate[1]}/${splitdDate[0]}/${splitdDate[2]}`;
+  return new Date(stringDate);
+}

@@ -19,45 +19,108 @@ import {
   generateRandomDate,
   getAssociatedImage,
 } from '../../helpers/functions';
+import { Filter } from '../../models/filter.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
-  override filter(
-    title: string,
-    status: boolean | null,
-    priority: Priority | null,
-    creationDate: Date | null,
-    closingDate: Date | null,
-    startIndex: number,
-    endIndex: number
-  ): Observable<{ tasks: Task[]; isLastPage: boolean }> {
+  totalLength = signal(0);
+  #filterSav = signal<Filter>({
+    title: '',
+    status: null,
+    startIndex: 0,
+    endIndex: 21,
+    priority: null,
+    creationDate: null,
+    closingDate: null,
+  });
+
+  filterSav = this.#filterSav.asReadonly();
+
+  paginate() {
+    this.#filterSav.update((prev) => {
+      return { ...prev, endIndex: prev.endIndex + 21 };
+    });
+  }
+
+  setFilter(filter: Filter) {
+    this.#filterSav.set(filter);
+  }
+
+  setTitle(title: string) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, title };
+    });
+  }
+  setPriority(priority: Priority | null) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, priority };
+    });
+  }
+
+  setStatus(status: boolean | null) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, status };
+    });
+  }
+
+  setCreatedDate(date: Date | null) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, creationDate: date };
+    });
+  }
+
+  setClosingDate(date: Date | null) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, closingDate: date };
+    });
+  }
+
+  override filter(): Observable<{ tasks: Task[]; isLastPage: boolean }> {
     return this.#taskList$.pipe(
       map((tasks) => {
-        const totalLength = tasks.length;
-        tasks = tasks.slice(startIndex, endIndex).filter((task) => {
-          return status !== null
-            ? task.completed === status &&
-                task.title.toLowerCase().includes(title.toLowerCase())
-            : task.title.toLowerCase().includes(title.toLowerCase());
+        this.totalLength.set(tasks.length);
+        console.log(this.totalLength());
+
+        tasks = tasks.filter((task) => {
+          return this.#filterSav().status !== null
+            ? task.completed === this.#filterSav().status &&
+                task.title
+                  .toLowerCase()
+                  .includes(this.#filterSav().title.toLowerCase())
+            : task.title
+                .toLowerCase()
+                .includes(this.#filterSav().title.toLowerCase().toLowerCase());
         });
 
-        if (priority !== null) {
-          tasks = tasks.filter((t) => t.priority === priority);
-        }
-
-        if (creationDate !== null) {
-          tasks = tasks.filter((t) => t.creationDate >= creationDate);
-        }
-
-        if (closingDate !== null) {
-          tasks = tasks.filter((t) =>
-            t.closingDate ? t.closingDate <= closingDate : null
+        if (this.#filterSav().priority !== null) {
+          tasks = tasks.filter(
+            (t) => t.priority === this.#filterSav().priority
           );
         }
 
-        return { tasks: tasks, isLastPage: totalLength === tasks.length };
+        if (this.#filterSav().creationDate !== null) {
+          tasks = tasks.filter(
+            (t) => t.creationDate >= this.#filterSav().creationDate!
+          );
+        }
+
+        if (this.#filterSav().closingDate !== null) {
+          tasks = tasks.filter((t) =>
+            t.closingDate
+              ? t.closingDate <= this.#filterSav().closingDate!
+              : null
+          );
+        }
+        tasks = tasks.slice(
+          this.#filterSav().startIndex,
+          this.#filterSav().endIndex
+        );
+        return {
+          tasks: tasks,
+          isLastPage: this.totalLength() === tasks.length,
+        };
       })
     );
   }

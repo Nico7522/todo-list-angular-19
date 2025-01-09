@@ -1,18 +1,35 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Priority } from '../../enums/priority.enum';
 import { Datepicker } from 'flowbite-datepicker';
+import { FormsModule } from '@angular/forms';
+import { FilterService } from '../../services/filter.service';
+import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 
 @Component({
   selector: 'app-filter',
   host: {
     class: '',
   },
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './filter.component.html',
   styleUrl: './filter.component.scss',
 })
 export class FilterComponent {
-  title = signal('');
+  readonly #tasksProvider = inject(FakeTasksProvider);
+  title = signal(this.#tasksProvider.filterSav().title);
+  selectedStatus = signal<boolean | null>(null);
+  prioritySelected = signal(
+    this.#tasksProvider.filterSav().priority !== null
+      ? this.#tasksProvider.filterSav().priority
+      : 'all'
+  );
+  selectedCreationDate = signal(
+    this.#tasksProvider.filterSav().creationDate?.toLocaleDateString()
+  );
+
+  selectedClosingDate = signal(
+    this.#tasksProvider.filterSav().closingDate?.toLocaleDateString()
+  );
   onTitleChange = output<string>();
   onStatusChange = output<boolean | null>();
   onPriorityChange = output<Priority | null>();
@@ -20,8 +37,6 @@ export class FilterComponent {
   onClosingDateChange = output<string>();
 
   onCloseFilter = output();
-
-  selectedStatus = signal<boolean | null>(null);
 
   closeFilter() {
     this.onCloseFilter.emit();

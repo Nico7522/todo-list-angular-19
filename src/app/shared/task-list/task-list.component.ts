@@ -15,6 +15,9 @@ import {
   tap,
 } from 'rxjs';
 import { Priority } from '../../enums/priority.enum';
+import { FilterService } from '../../services/filter.service';
+import { Filter } from '../../models/filter.model';
+import { formateDate } from '../../helpers/functions';
 
 @Component({
   selector: 'app-task-list',
@@ -25,89 +28,43 @@ import { Priority } from '../../enums/priority.enum';
 export class TaskListComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #filterService = inject(FilterService);
   readonly #router = inject(Router);
   role = this.#usersProvider.role;
   onHomePage = this.#router.url.includes('list');
-  title = signal('');
-  status = signal<boolean | null>(null);
-  search = signal('');
-  startIndex = signal(0);
-  endIndex = signal(21);
   isFilterOpen = signal(false);
   showFilter = signal(false);
   isLastPage = signal(false);
-  filter = signal<{
-    title: string;
-    status: boolean | null;
-    startIndex: number;
-    endIndex: number;
-    priority: Priority | null;
-    creationDate: Date | null;
-    closingDate: Date | null;
-  }>({
-    title: '',
-    status: null,
-    startIndex: 0,
-    endIndex: 21,
-    priority: null,
-    creationDate: null,
-    closingDate: null,
-  });
+
   body = document.querySelector('body') as HTMLBodyElement;
   paginate() {
-    this.filter.update((prev) => {
-      return { ...prev, endIndex: prev.endIndex + 21 };
-    });
+    this.#tasksProvider.paginate();
   }
   filterByTitle(value: string) {
-    this.filter.update((prev) => {
-      return { ...prev, title: value };
-    });
+    this.#tasksProvider.setTitle(value);
   }
 
   filterByStatus(completed: boolean | null) {
-    this.filter.update((prev) => {
-      return { ...prev, status: completed };
-    });
+    this.#tasksProvider.setStatus(completed);
   }
 
   filterByPriority(priority: Priority | null) {
-    this.filter.update((prev) => {
-      return { ...prev, priority: priority };
-    });
+    this.#tasksProvider.setPriority(priority);
   }
 
   filterByCreationDate(date: string) {
-    let splitdDate = date.split('/');
-    let stringDate = `${splitdDate[1]}/${splitdDate[0]}/${splitdDate[2]}`;
-    let formatedDate = new Date(stringDate);
-    this.filter.update((prev) => {
-      return { ...prev, creationDate: formatedDate };
-    });
+    this.#tasksProvider.setCreatedDate(formateDate(date));
   }
 
   filterByClosingDate(date: string) {
-    let splitdDate = date.split('/');
-    let stringDate = `${splitdDate[1]}/${splitdDate[0]}/${splitdDate[2]}`;
-    let formatedDate = new Date(stringDate);
-    this.filter.update((prev) => {
-      return { ...prev, closingDate: formatedDate };
-    });
+    this.#tasksProvider.setClosingDate(formateDate(date));
   }
 
-  tasks = toObservable(this.filter).pipe(
+  tasks = toObservable(this.#tasksProvider.filterSav).pipe(
     debounceTime(300),
     distinctUntilChanged(),
     switchMap((_) => {
-      return this.#tasksProvider.filter(
-        this.filter().title,
-        this.filter().status,
-        this.filter().priority,
-        this.filter().creationDate,
-        this.filter().closingDate,
-        this.filter().startIndex,
-        this.filter().endIndex
-      );
+      return this.#tasksProvider.filter();
     }),
     shareReplay()
   );
