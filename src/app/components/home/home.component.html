@@ -20,7 +20,7 @@
     <div
         class="{{role() ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}} transition ease-in-out delay-150 py-10 bg-select w-56 md:w-96  m-auto mt-10 rounded-md shadow-xl  mb-5">
         @if (role()) {
-        <h4 class=" text-center mb-5">Liste des utilisateurs</h4>
+        <h4 class=" text-center mb-5">Nom d'utilisateur</h4>
 
         <div class="mx-10">
             <input #username (input)="onUsernameChange(username.value)"
