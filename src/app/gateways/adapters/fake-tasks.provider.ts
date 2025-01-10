@@ -38,42 +38,29 @@ export class FakeTasksProvider extends TasksProvider {
 
   filterSav = this.#filterSav.asReadonly();
 
+  resetFilter() {
+    this.#filterSav.update(() => {
+      return {
+        title: '',
+        status: null,
+        startIndex: 0,
+        endIndex: 21,
+        priority: null,
+        creationDate: null,
+        closingDate: null,
+      };
+    });
+  }
+
+  updateFilter(data: Partial<Filter>) {
+    this.#filterSav.update((prev) => {
+      return { ...prev, ...data };
+    });
+  }
+
   paginate() {
     this.#filterSav.update((prev) => {
       return { ...prev, endIndex: prev.endIndex + 21 };
-    });
-  }
-
-  setFilter(filter: Filter) {
-    this.#filterSav.set(filter);
-  }
-
-  setTitle(title: string) {
-    this.#filterSav.update((prev) => {
-      return { ...prev, title };
-    });
-  }
-  setPriority(priority: Priority | null) {
-    this.#filterSav.update((prev) => {
-      return { ...prev, priority };
-    });
-  }
-
-  setStatus(status: boolean | null) {
-    this.#filterSav.update((prev) => {
-      return { ...prev, status };
-    });
-  }
-
-  setCreatedDate(date: Date | null) {
-    this.#filterSav.update((prev) => {
-      return { ...prev, creationDate: date };
-    });
-  }
-
-  setClosingDate(date: Date | null) {
-    this.#filterSav.update((prev) => {
-      return { ...prev, closingDate: date };
     });
   }
 
@@ -81,8 +68,6 @@ export class FakeTasksProvider extends TasksProvider {
     return this.#taskList$.pipe(
       map((tasks) => {
         this.totalLength.set(tasks.length);
-        console.log(this.totalLength());
-
         tasks = tasks.filter((task) => {
           return this.#filterSav().status !== null
             ? task.completed === this.#filterSav().status &&

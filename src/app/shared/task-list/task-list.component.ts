@@ -40,25 +40,6 @@ export class TaskListComponent {
   paginate() {
     this.#tasksProvider.paginate();
   }
-  filterByTitle(value: string) {
-    this.#tasksProvider.setTitle(value);
-  }
-
-  filterByStatus(completed: boolean | null) {
-    this.#tasksProvider.setStatus(completed);
-  }
-
-  filterByPriority(priority: Priority | null) {
-    this.#tasksProvider.setPriority(priority);
-  }
-
-  filterByCreationDate(date: string) {
-    this.#tasksProvider.setCreatedDate(formateDate(date));
-  }
-
-  filterByClosingDate(date: string) {
-    this.#tasksProvider.setClosingDate(formateDate(date));
-  }
 
   tasks = toObservable(this.#tasksProvider.filterSav).pipe(
     debounceTime(300),

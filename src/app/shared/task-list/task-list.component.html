@@ -6,10 +6,7 @@
     <div
         class="{{isFilterOpen() && showFilter() ? 'opacity-100' : 'opacity-0 -z-10'}} transition ease-in-out duration-300">
         @if (isFilterOpen()) {
-        <app-filter (onTitleChange)="filterByTitle($event)" (onStatusChange)="filterByStatus($event)"
-            (onPriorityChange)="filterByPriority($event)" (onCloseFilter)="onCloseFilter()"
-            (onCreationDateChange)="filterByCreationDate($event)" (onClosingDateChange)="filterByClosingDate($event)" />
-
+        <app-filter (onCloseFilter)="onCloseFilter()" />
         }
 
     </div>
