@@ -2,7 +2,7 @@
 inset-0
 left-0
 top-0
-md:h-[500px]
+md:h-[600px]
 md:w-96
 m-auto
 shadow-xl
@@ -31,12 +31,20 @@ z-10 bg-default rounded-md">
         <button (click)="filterByStatus(null)" [class.border-2]="selectedStatus() === null"
             class="py-1 px-3 rounded-xl bg-blue-500">Toutes</button>
         <select [(ngModel)]="prioritySelected" #priority (change)="filterByPriority(priority.value)" id="priority"
-            class=" border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 bg-default dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            class=" border w-44 border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 bg-default dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option selected>Choisir une priorité</option>
             <option value="all">Toute</option>
             <option value="0">Basse</option>
             <option value="1">Moyenne</option>
             <option value="2">Haute</option>
+
+        </select>
+
+        <select [(ngModel)]="dateAsc" #dateOrder (change)="filterByDateAsc(dateOrder.value)" id="dateOrder"
+            class=" border w-44 border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 bg-default dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="asc">Du plus récent</option>
+            <option value="desc">Du plus ancien</option>
+
 
         </select>
         <input [(ngModel)]="title" #searchInput (input)="filterByTitle(searchInput.value)"

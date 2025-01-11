@@ -19,7 +19,9 @@ export class FilterComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
 
   title = signal(this.#tasksProvider.filterSav().title);
-  selectedStatus = signal<boolean | null>(null);
+  selectedStatus = signal<boolean | null>(
+    this.#tasksProvider.filterSav().status
+  );
   prioritySelected = signal(
     this.#tasksProvider.filterSav().priority !== null
       ? this.#tasksProvider.filterSav().priority
@@ -32,7 +34,7 @@ export class FilterComponent {
   selectedClosingDate = signal(
     this.#tasksProvider.filterSav().closingDate?.toLocaleDateString()
   );
-
+  dateAsc = signal(this.#tasksProvider.filterSav().dateAsc ? 'asc' : 'desc');
   onCloseFilter = output();
 
   resetFilter() {
@@ -42,6 +44,7 @@ export class FilterComponent {
     this.prioritySelected.set('all');
     this.selectedCreationDate.set('');
     this.selectedClosingDate.set('');
+    this.dateAsc.set('asc');
 
     const creationDatePicker = document.getElementById('creationDatePicker');
     const closingDatePicker = document.getElementById('closingDatePicker');
@@ -55,6 +58,10 @@ export class FilterComponent {
 
   closeFilter() {
     this.onCloseFilter.emit();
+  }
+
+  filterByDateAsc(asc: string) {
+    this.#tasksProvider.updateFilter({ dateAsc: asc === 'asc' ? true : false });
   }
 
   filterByTitle(title: string) {

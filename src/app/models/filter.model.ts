@@ -8,4 +8,5 @@ export type Filter = {
   priority: Priority | null;
   creationDate: Date | null;
   closingDate: Date | null;
+  dateAsc: boolean;
 };

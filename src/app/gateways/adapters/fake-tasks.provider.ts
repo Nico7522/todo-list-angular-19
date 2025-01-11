@@ -34,6 +34,7 @@ export class FakeTasksProvider extends TasksProvider {
     priority: null,
     creationDate: null,
     closingDate: null,
+    dateAsc: true,
   });
 
   filterSav = this.#filterSav.asReadonly();
@@ -48,6 +49,7 @@ export class FakeTasksProvider extends TasksProvider {
         priority: null,
         creationDate: null,
         closingDate: null,
+        dateAsc: true,
       };
     });
   }
@@ -98,6 +100,11 @@ export class FakeTasksProvider extends TasksProvider {
               : null
           );
         }
+
+        if (this.#filterSav().dateAsc)
+          tasks.sort((a, b) => +b.creationDate - +a.creationDate);
+        else tasks.sort((a, b) => +a.creationDate - +b.creationDate);
+
         tasks = tasks.slice(
           this.#filterSav().startIndex,
           this.#filterSav().endIndex
