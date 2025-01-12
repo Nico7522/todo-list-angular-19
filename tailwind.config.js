@@ -13,6 +13,9 @@ module.exports = {
         'default': 'rgb(24, 24, 24)',
         'onHover': 'rgb(29, 29, 29)'
       },
+      screens: {
+        'nav': '1400px'
+      }
     },
 
   },

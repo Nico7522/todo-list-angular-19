@@ -2,7 +2,6 @@ import { Component, inject, linkedSignal, output, signal } from '@angular/core';
 import { Priority } from '../../enums/priority.enum';
 import { Datepicker } from 'flowbite-datepicker';
 import { FormsModule } from '@angular/forms';
-import { FilterService } from '../../services/filter.service';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { formateDate } from '../../helpers/functions';
 
@@ -74,6 +73,7 @@ export class FilterComponent {
   }
 
   filterByPriority(priority: string) {
+    this.prioritySelected.set(priority);
     if (+priority in Priority) {
       this.#tasksProvider.updateFilter({ priority: +priority });
     } else {
