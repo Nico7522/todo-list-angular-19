@@ -147,6 +147,24 @@ export class FakeTasksProvider extends TasksProvider {
         })
       );
   }
+
+  override createWithoutPicture(task: Task): Observable<number> {
+    return this.#taskList$.pipe(
+      take(1),
+      map((tasks) => {
+        const previousLength = tasks.length;
+        let newTaskList = [...tasks, { ...task, id: tasks.length + 1 }];
+        if (previousLength < newTaskList.length) {
+          this.#taskList$.next(newTaskList);
+          return newTaskList.length;
+        } else {
+          throw new CustomError("La tâche n'a pas pu être crée", {
+            status: 400,
+          });
+        }
+      })
+    );
+  }
   override create(task: Task, formData: FormData): Observable<number> {
     return this.#taskList$.pipe(
       take(1),

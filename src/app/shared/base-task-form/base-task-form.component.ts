@@ -61,10 +61,7 @@ export class BaseTaskFormComponent {
           nonNullable: true,
           validators: [Validators.required],
         }),
-        image: new FormControl(null, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
+        image: new FormControl(null, {}),
       })
     );
     if (this.task) {

@@ -3,7 +3,13 @@
 @if (task$ | async; as task ) {
 <div class="p-5">
     <h1 class="text-white text-5xl mb-5">{{ task.title }}</h1>
+    @if (task.imgUrl) {
     <img [src]="imgUrl + '/' + task.imgUrl" class="w-96 mb-5" alt="" />
+
+    } @else {
+    <img src="assets/noimage.png" class="w-96 mb-5" alt="" />
+
+    }
     <p class="inline text-xl">Tâche de priorité :</p>
     <app-priority [priority]="task.priority" />
     <p class="my-5">Ajoutée le {{task.creationDate | checkDateFormat}}</p>

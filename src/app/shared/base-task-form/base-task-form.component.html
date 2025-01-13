@@ -33,12 +33,7 @@
             class="block w-full text-sm border border-slate-200 rounded-lg cursor-pointer  text-white focus:outline-none  dark:border-gray-600 "
             id="image" type="file">
     </div>
-    @if (this.parentFormGroup.controls['base']
-    .get('image')
-    ?.getError('required') &&
-    this.parentFormGroup.controls['base'].get('image')?.touched) {
-    <span class="text-red-600  w-full">Image requise</span>
-    }
+
 
 
 

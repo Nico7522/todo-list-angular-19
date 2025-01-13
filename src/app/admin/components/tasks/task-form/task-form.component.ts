@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from '../../../../services/message.service';
 import { Router } from '@angular/router';
 import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
+import { createTask } from '../../../../helpers/functions';
 
 @Component({
   selector: 'app-task-form',
@@ -58,30 +59,20 @@ export class TaskFormComponent {
           creationDate: new Date(),
         };
         this.#messageService.showLoader();
-        this.#tasksProvider
-          .create(task, this.formData())
-          .pipe(
-            takeUntilDestroyed(this.destroyRef),
-            catchError((e) => {
-              this.#messageService.showMessage(
-                'Une erreur est survenue.',
-                'error'
-              );
-              this.#messageService.hideLoader();
-              return EMPTY;
-            })
-          )
-          .subscribe({
-            next: (taskId) => {
-              this.isFormUntouched.set(true);
-              this.#messageService.showMessage(
-                'La tâche a été crée.',
-                'success'
-              );
-              this.#messageService.hideLoader();
-              this.#router.navigate(['/task', taskId]);
-            },
-          });
+        createTask(
+          this.#tasksProvider,
+          image != null,
+          task,
+          this.formData(),
+          this.#messageService
+        ).subscribe({
+          next: (taskId) => {
+            this.isFormUntouched.set(true);
+            this.#messageService.showMessage('La tâche a été crée.', 'success');
+            this.#messageService.hideLoader();
+            this.#router.navigate(['/task', taskId]);
+          },
+        });
       }
     }
   }
