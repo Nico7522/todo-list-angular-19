@@ -1,7 +1,7 @@
 import { Priority } from '../enums/priority.enum';
 
 export interface Task {
-  userId: number | null;
+  userId: string | null;
   id: number;
   title: string;
   completed: boolean;

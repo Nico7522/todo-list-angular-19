@@ -1,8 +1,8 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, DestroyRef, inject, input } from '@angular/core';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { of, shareReplay, switchMap } from 'rxjs';
+import { of, shareReplay, switchMap, tap } from 'rxjs';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 
@@ -15,7 +15,8 @@ import { PriorityComponent } from '../../../shared/priority/priority.component';
 export class UserDetailsComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #tasksProvider = inject(FakeTasksProvider);
-  id = input.required<number>();
+  destroyRef = inject(DestroyRef);
+  id = input.required<string>();
 
   user$ = toObservable(this.id).pipe(
     switchMap((id) => {
@@ -24,6 +25,9 @@ export class UserDetailsComponent {
     shareReplay()
   );
   tasks$ = this.user$.pipe(
+    tap((_) =>
+      window.scrollTo(0, window.document.body.scrollHeight - window.innerHeight)
+    ),
     switchMap((user) => {
       if (user) return this.#tasksProvider.getTasksByUserId(user?.id);
 

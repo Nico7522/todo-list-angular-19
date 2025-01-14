@@ -75,7 +75,7 @@ export class EditTaskComponent {
         completed: completed,
         userId: null,
       };
-      if (userId) task.userId = +userId;
+      if (userId) task.userId = userId;
 
       if (task.completed && !this.isClosingDateExist()) {
         task.closingDate = new Date();

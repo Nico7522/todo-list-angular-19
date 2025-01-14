@@ -1,9 +1,13 @@
 @defer (hydrate on interaction) {
-<div class="flex w-full">
+<div class="flex md:flex-row flex-col  items-center m-2 gap-2">
     <button type="button" (click)="showCreateForm()"
-        class="mr-20 mt-5 m-auto px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter
+        class="px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter
         un utilisateur</button>
-
+    <input #searchInput
+        class="bg-default  px-2 py-2 focus:ring-2 focus:ring-gray-800 focus:outline-none text-white rounded-lg"
+        type="search" placeholder="Pseudo ...">
+    <button type="button" (click)="filterByUsername(searchInput.value)"
+        class="text-white  md:my-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm py-1 px-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Rechercher</button>
 </div>
 }
 <div class="relative overflow-x-auto mx-20">
@@ -24,6 +28,7 @@
         </thead>
         <tbody>
             @for (user of users$ | async; track user.id) {
+
             <tr class="border-b">
                 <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap ">
                     {{user.id}}
@@ -48,8 +53,12 @@
             }
         </tbody>
     </table>
+    <button (click)="paginate()"
+        class="rounded-md block m-auto my-5 text-sm bg-select py-1 px-3 border border-transparent text-center  text-white transition-all shadow-md hover:shadow-lg focus:bg-onHover focus:shadow-none active:bg-onHover hover:bg-onHover active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none "
+        type="button">
+        Voir plus
+    </button>
 </div>
-
 <section class="{{action().show ? 'opacity-100' : 'opacity-0'}}  transition ease-in-out duration-300">
     @if (action().action === "details") {
     <app-user-details [id]="action().id!" />

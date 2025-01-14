@@ -55,7 +55,7 @@ export class TaskFormComponent {
           title: title,
           priority: +priority,
           completed: false,
-          userId: userId ? +userId : null,
+          userId: userId ? userId : null,
           creationDate: new Date(),
         };
         this.#messageService.showLoader();

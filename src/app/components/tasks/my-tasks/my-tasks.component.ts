@@ -3,6 +3,7 @@ import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provide
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { TaskComponent } from '../../../shared/task/task.component';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-my-tasks',
@@ -15,5 +16,5 @@ export class MyTasksComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
 
   currentUser = this.#usersProvider.currentUser;
-  tasks$ = this.#tasksProvider.getTasksByUserId(this.currentUser()?.id || 0);
+  tasks$ = this.#tasksProvider.getTasksByUserId(this.currentUser()?.id || '');
 }

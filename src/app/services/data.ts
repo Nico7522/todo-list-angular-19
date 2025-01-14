@@ -15,26 +15,3 @@ export const images = [
   'study.jpeg',
 ];
 export const completed = [false, true];
-
-export const users: User[] = [
-  {
-    id: 1,
-    username: 'John',
-  },
-  {
-    id: 2,
-    username: 'Nicolas',
-  },
-  {
-    id: 3,
-    username: 'Anne',
-  },
-  {
-    id: 4,
-    username: 'Jean',
-  },
-  {
-    id: 5,
-    username: 'Pierre',
-  },
-];

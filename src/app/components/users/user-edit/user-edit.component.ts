@@ -18,7 +18,7 @@ export class UserEditComponent {
   readonly #formBuilder = inject(FormBuilder).nonNullable;
   readonly #messageService = inject(MessageService);
   destroyRef = inject(DestroyRef);
-  id = input.required<number>();
+  id = input.required<string>();
   sucessEdit = output<boolean>();
   onSucessEdit() {
     this.sucessEdit.emit(true);
@@ -28,13 +28,15 @@ export class UserEditComponent {
   });
   user$ = toObservable(this.id).pipe(
     switchMap((id) => {
-      return this.#usersProvider
-        .getUser(id)
-        .pipe(
-          tap((user) =>
-            this.editForm.get('username')?.patchValue(user?.username || '')
-          )
-        );
+      return this.#usersProvider.getUser(id).pipe(
+        tap((user) => {
+          window.scrollTo(
+            0,
+            window.document.body.scrollHeight - window.innerHeight
+          );
+          this.editForm.get('username')?.patchValue(user?.username || '');
+        })
+      );
     })
   );
 

@@ -6,10 +6,11 @@ import {
   Observable,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
-import { completed, titles, users } from '../../services/data';
+import { completed, titles } from '../../services/data';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
@@ -20,11 +21,13 @@ import {
   getAssociatedImage,
 } from '../../helpers/functions';
 import { Filter } from '../../models/filter.model';
+import { FakeUsersProvider } from './fake-users.provider';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
+  readonly #usersProvider = inject(FakeUsersProvider);
   totalLength = signal(0);
   #filterSav = signal<Filter>({
     title: '',
@@ -226,9 +229,8 @@ export class FakeTasksProvider extends TasksProvider {
     );
   }
 
-  override getTasksByUserId(id: number): Observable<Task[]> {
+  override getTasksByUserId(id: string): Observable<Task[]> {
     return this.#taskList$.pipe(
-      filter((_) => id !== 0),
       map((tasks) => {
         tasks = tasks.filter((task) => task.userId === id);
         return tasks;
@@ -237,14 +239,14 @@ export class FakeTasksProvider extends TasksProvider {
   }
   #taskList$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   taskList$ = this.#taskList$.asObservable();
-  getRandomTasks() {
+  getRandomTasks(): Observable<boolean> {
     let todos: Task[] = [];
     let i = 0;
     while (i < 100) {
       let todo: Task = {
         title: titles[Math.floor(Math.random() * titles.length)],
         priority: Math.floor(Math.random() * 3),
-        userId: users[Math.floor(Math.random() * users.length)].id,
+        userId: null,
         id: i,
         completed: completed[Math.floor(Math.random() * completed.length)],
         creationDate: generateRandomDate(),
@@ -256,7 +258,18 @@ export class FakeTasksProvider extends TasksProvider {
       todos.push(todo);
       i++;
     }
-    this.#taskList$.next(todos);
+    return this.#usersProvider.getUsers().pipe(
+      take(1),
+      map((users) => {
+        todos = todos.map((task) => {
+          task.userId = users[Math.floor(Math.random() * users.length)].id;
+          this.#taskList$.next(todos);
+          return task;
+        });
+
+        return true;
+      })
+    );
   }
   override getTask(id: string): Observable<Task> {
     return this.#taskList$.pipe(

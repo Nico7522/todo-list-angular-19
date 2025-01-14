@@ -1,16 +1,30 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { UserDetailsComponent } from '../../../../components/users/user-details/user-details.component';
 import { UserEditComponent } from '../../../../components/users/user-edit/user-edit.component';
 import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY } from 'rxjs';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  map,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { MessageService } from '../../../../services/message.service';
 import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 type Action = {
   show: boolean;
-  id?: number;
+  id?: string;
   action: 'edit' | 'details' | 'create' | 'delete' | null;
 };
 
@@ -31,13 +45,44 @@ export class UserListComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #destroyRef = inject(DestroyRef);
   readonly #messageService = inject(MessageService);
-  users$ = this.#usersProvider.getUsers();
-  action = signal<Action>({ show: false, id: 0, action: 'details' });
-  showDetails(id: number) {
+  readonly child =
+    viewChild.required<UserDetailsComponent>(UserDetailsComponent);
+  #limit = signal(25);
+
+  pseudo = signal('');
+
+  filterByUsername(word: string) {
+    this.#usersProvider
+      .getUserByUsername(word)
+      .pipe(
+        takeUntilDestroyed(this.child().destroyRef),
+        filter((user) => user != null),
+        tap((user) => {
+          this.showDetails(user.id);
+        })
+      )
+      .subscribe();
+  }
+
+  users$ = toObservable(this.#limit).pipe(
+    switchMap(() =>
+      this.#usersProvider
+        .getUsers()
+        .pipe(map((users) => users.slice(0, this.#limit())))
+    )
+  );
+
+  action = signal<Action>({ show: false, id: '', action: 'details' });
+
+  paginate() {
+    this.#limit.update((prevLimit) => prevLimit + 25);
+  }
+
+  showDetails(id: string) {
     this.action.set({ show: true, id, action: 'details' });
   }
 
-  showEditForm(id: number) {
+  showEditForm(id: string) {
     this.action.set({ show: true, id, action: 'edit' });
   }
 
@@ -45,7 +90,7 @@ export class UserListComponent {
     this.action.set({ show: false, action: null });
   }
 
-  showDeleteConfirmation(id: number) {
+  showDeleteConfirmation(id: string) {
     this.action.set({ show: true, id, action: 'delete' });
   }
 
@@ -57,6 +102,8 @@ export class UserListComponent {
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
         catchError((err) => {
+          console.log('ici');
+
           this.action.set({ show: false, action: null });
           this.#messageService.showMessage(err.message, 'error');
           this.#messageService.hideLoader();

@@ -64,17 +64,6 @@ export function createTask(
         return EMPTY;
       })
     );
-    // .subscribe({
-    //   next: (taskId) => {
-    //     this.isFormUntouched.set(true);
-    //     messageService.showMessage(
-    //       'La tâche a été crée.',
-    //       'success'
-    //     );
-    //     messageService.hideLoader();
-    //     this.#router.navigate(['/task', taskId]);
-    //   },
-    // });
   } else {
     return tasksProvider.createWithoutPicture(task).pipe(
       map((taskId) => taskId),
@@ -84,16 +73,5 @@ export function createTask(
         return EMPTY;
       })
     );
-    // .subscribe({
-    //   next: (taskId) => {
-    //     this.isFormUntouched.set(true);
-    //     messageService.showMessage(
-    //       'La tâche a été crée.',
-    //       'success'
-    //     );
-    //     messageService.hideLoader();
-    //     this.#router.navigate(['/task', taskId]);
-    //   },
-    // });
   }
 }

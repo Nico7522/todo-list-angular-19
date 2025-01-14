@@ -1,4 +1,10 @@
 export interface User {
-  id: number;
+  id: string;
   username: string;
+  email?: string;
+  name?: string;
+  surname?: string;
+  gender?: 'female' | 'male';
+  country?: string;
+  picture?: string;
 }

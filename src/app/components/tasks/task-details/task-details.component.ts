@@ -1,7 +1,15 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { AsyncPipe, Location } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, filter, of, shareReplay, switchMap } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  filter,
+  of,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { PriorityComponent } from '../../../shared/priority/priority.component';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';

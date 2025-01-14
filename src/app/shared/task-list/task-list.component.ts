@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FilterComponent } from '../filter/filter.component';
 import { TaskComponent } from '../task/task.component';
 import { Router, RouterModule } from '@angular/router';
@@ -9,15 +9,9 @@ import { AsyncPipe } from '@angular/common';
 import {
   debounceTime,
   distinctUntilChanged,
-  map,
   shareReplay,
   switchMap,
-  tap,
 } from 'rxjs';
-import { Priority } from '../../enums/priority.enum';
-import { FilterService } from '../../services/filter.service';
-import { Filter } from '../../models/filter.model';
-import { formateDate } from '../../helpers/functions';
 
 @Component({
   selector: 'app-task-list',
@@ -28,7 +22,6 @@ import { formateDate } from '../../helpers/functions';
 export class TaskListComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #usersProvider = inject(FakeUsersProvider);
-  readonly #filterService = inject(FilterService);
   readonly #router = inject(Router);
   role = this.#usersProvider.role;
   onHomePage = this.#router.url.includes('list');

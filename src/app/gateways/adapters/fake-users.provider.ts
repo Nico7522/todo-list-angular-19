@@ -1,64 +1,76 @@
-import { BehaviorSubject, Observable, of, shareReplay, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+  throwError,
+} from 'rxjs';
 import { User } from '../../models/user.model';
 import { UsersProvider } from '../ports/users.provider';
-import { users } from '../../services/data';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
   override createUserAdmin(username: string): Observable<boolean> {
-    let existingUser = users.find((u) => u.username === username);
+    let currentList = this.users$.getValue();
+    let existingUser = currentList.find((u) => u.username === username);
     if (existingUser) {
       return throwError(() => {
-        const error = new CustomError("Le nom d'utilisateur existe déjà", {
+        const error = new CustomError("L'utilisateur existe déjà", {
           status: 400,
         });
         return error;
       });
     }
-
     let user: User = {
-      id: users.length + 1,
+      id: uuidv4(),
       username: username,
     };
-    users.push(user);
-    this.users$.next(users);
-
+    let newList = [...currentList, user];
+    this.users$.next(newList);
     return of(true);
   }
   readonly #httpClient = inject(HttpClient);
   users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
-  override delete(id: number): Observable<boolean> {
-    let user = users.find((u) => u.id === id);
-    if (!user)
-      return throwError(() => {
-        const error = new CustomError('Utilisateur non trouvé', {
+  override delete(id: string): Observable<boolean> {
+    return this.users$.pipe(
+      map((users) => {
+        let user = users.find((u) => u.id === id);
+        if (!user)
+          throw new CustomError("L'utilisateur n'a pas été trouvé", {
+            status: 404,
+          });
+        let newUserList = users.filter((u) => u.id !== id);
+        this.users$.next(newUserList);
+        return true;
+      })
+    );
+  }
+
+  override edit(id: string, user: User): Observable<boolean> {
+    return this.users$.pipe(
+      take(1),
+      map((users) => {
+        let index = users.findIndex((u) => u.id === id);
+        if (index !== -1) {
+          users[index] = { ...users[index], ...user };
+          this.users$.next(users);
+          return true;
+        }
+        throw new CustomError("L'utilisateur n'a pas été trouvé", {
           status: 404,
         });
-        return error;
-      });
-    let newUserList = users.filter((u) => u.id !== id);
-    this.users$.next(newUserList);
-    return of(true);
-  }
-  override edit(id: number, user: User): Observable<boolean> {
-    let index = users.findIndex((u) => u.id === id);
-    if (index !== -1) {
-      users[index] = { ...users[index], ...user };
-      return of(true);
-    }
-    return throwError(() => {
-      const error = new CustomError(
-        "Le nom d'utilisateur n'a pas pu être modifié",
-        { status: 400 }
-      );
-      return error;
-    });
+      })
+    );
   }
 
   #currentUser = signal<User | null>(null);
@@ -73,21 +85,96 @@ export class FakeUsersProvider extends UsersProvider {
     this.#role.set(null);
     this.#showMenu.set(false);
   }
-  override createUser(username: string): void {
+  override createUser(username: string): Observable<boolean> {
     let user: User = {
-      id: users.length + 1,
+      id: uuidv4(),
       username: username,
     };
-    users.push(user);
 
-    this.login(user);
+    let currentList = this.users$.getValue();
+    let newList = [...currentList, user];
+
+    if (currentList.length < newList.length) {
+      this.users$.next(newList);
+      this.login(user);
+      return of(true);
+    }
+
+    return throwError(() => {
+      const error = new CustomError("L'utilisateur n'a pas pu être créé", {
+        status: 400,
+      });
+      return error;
+    });
   }
-  override getUser(id: number): Observable<User | null> {
-    const user = users.find((u) => u.id === id);
-    return user ? of(user) : of(null);
+  override getUserByUsername(username: string): Observable<User | null> {
+    return this.users$.pipe(
+      map((users) => {
+        let user = users.find((u) => u.username === username);
+        return user ? user : null;
+      })
+    );
   }
+
+  override getUser(id: string): Observable<User | null> {
+    return this.users$.pipe(
+      take(1),
+      map((users) => {
+        let user = users.find((u) => u.id === id);
+        if (user) return user;
+        return null;
+      })
+    );
+  }
+
+  override getRandomUsers(): Observable<User[]> {
+    let userList: User[] = [];
+
+    return this.#httpClient
+      .get<{ results: any[] }>(`https://randomuser.me/api/?results=100`)
+      .pipe(
+        take(1),
+        map((data) => {
+          data.results.map(
+            (u: {
+              login: { uuid: string; username: string };
+              email: string;
+              name: { first: string; last: string };
+              location: { country: string };
+              gender: 'female' | 'male';
+              picture: { medium: string };
+            }) => {
+              let user: User = {
+                id: u.login.uuid,
+                username: u.login.username,
+                email: u.email,
+                name: u.name.first,
+                surname: u.name.last,
+                country: u.location.country,
+                gender: u.gender,
+                picture: u.picture.medium,
+              };
+              userList.push(user);
+            }
+          );
+          this.users$.next(userList);
+          return userList;
+        }),
+        catchError(() => {
+          return throwError(() => {
+            const error = new CustomError(
+              "Les utilisateurs n'ont pas pu être généré",
+              {
+                status: 400,
+              }
+            );
+            return error;
+          });
+        })
+      );
+  }
+
   override getUsers(): Observable<User[]> {
-    this.users$.next(users);
     return this.users$;
   }
 
