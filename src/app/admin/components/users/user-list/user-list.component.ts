@@ -17,7 +17,10 @@ import {
   EMPTY,
   filter,
   map,
+  Subject,
   switchMap,
+  take,
+  takeUntil,
   tap,
 } from 'rxjs';
 import { MessageService } from '../../../../services/message.service';
@@ -45,20 +48,26 @@ export class UserListComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #destroyRef = inject(DestroyRef);
   readonly #messageService = inject(MessageService);
-  readonly child =
-    viewChild.required<UserDetailsComponent>(UserDetailsComponent);
+
   #limit = signal(25);
-
   pseudo = signal('');
-
+  #subject$ = new Subject<void>();
   filterByUsername(word: string) {
+    this.#subject$.next();
     this.#usersProvider
       .getUserByUsername(word)
       .pipe(
-        takeUntilDestroyed(this.child().destroyRef),
-        filter((user) => user != null),
+        take(1),
         tap((user) => {
-          this.showDetails(user.id);
+          if (user) this.showDetails(user.id);
+          else
+            this.#messageService.showMessage(
+              'Aucun utilisateur avec ce pseudo',
+              'error'
+            );
+        }),
+        catchError(() => {
+          return EMPTY;
         })
       )
       .subscribe();

@@ -6,6 +6,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { User } from '../../../models/user.model';
 import { MessageService } from '../../../services/message.service';
+import { countries } from '../../../services/data';
 
 @Component({
   selector: 'app-user-edit',
@@ -17,6 +18,7 @@ export class UserEditComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #formBuilder = inject(FormBuilder).nonNullable;
   readonly #messageService = inject(MessageService);
+  countries = countries;
   destroyRef = inject(DestroyRef);
   id = input.required<string>();
   sucessEdit = output<boolean>();
@@ -25,6 +27,12 @@ export class UserEditComponent {
   }
   editForm = this.#formBuilder.group({
     username: ['', Validators.required],
+    name: ['', Validators.required],
+    surname: ['', Validators.required],
+
+    email: ['', Validators.required],
+    gender: ['', Validators.required],
+    country: ['', Validators.required],
   });
   user$ = toObservable(this.id).pipe(
     switchMap((id) => {
@@ -35,6 +43,18 @@ export class UserEditComponent {
             window.document.body.scrollHeight - window.innerHeight
           );
           this.editForm.get('username')?.patchValue(user?.username || '');
+          this.editForm.get('email')?.patchValue(user?.email || '');
+          this.editForm.get('name')?.patchValue(user?.name || '');
+          this.editForm.get('surname')?.patchValue(user?.surname || '');
+
+          this.editForm
+            .get('gender')
+            ?.patchValue(
+              user?.gender && user.gender === 'female' ? 'female' : 'male'
+            );
+          this.editForm
+            .get('country')
+            ?.patchValue(user?.country ? user.country : 'default');
         })
       );
     })
