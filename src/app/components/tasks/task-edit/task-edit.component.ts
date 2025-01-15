@@ -11,27 +11,12 @@ import {
   toObservable,
   toSignal,
 } from '@angular/core/rxjs-interop';
-import {
-  FormBuilder,
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  catchError,
-  EMPTY,
-  map,
-  of,
-  Subject,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { catchError, EMPTY, map, of, Subject, switchMap, take } from 'rxjs';
 import { Router } from '@angular/router';
 import { MessageService } from '../../../services/message.service';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { Task } from '../../../models/task.model';
-import { Priority } from '../../../enums/priority.enum';
 import { Response } from '../../../models/response.model';
 import { ConfirmationModalComponent } from '../../../shared/confirmation-modal/confirmation-modal.component';
 import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
@@ -82,6 +67,8 @@ export class TaskEditComponent {
   response = signal<Response>('loading');
 
   onSubmit() {
+    let data = this.editForm.getRawValue();
+
     const title = this.editForm.get('base.title')?.value;
     const priority = this.editForm.get('base.priorities')?.value;
     const image = this.editForm.get('base.image')?.value;

@@ -61,34 +61,35 @@ export class UserEditComponent {
   );
 
   onSubmit() {
-    let username = this.editForm.get('username')?.value;
-    if (username) {
-      let user: User = {
-        id: this.id(),
-        username: username,
-      };
-      this.#messageService.showLoader();
+    let data = this.editForm.getRawValue();
+    let user: User = {
+      ...data,
+      id: this.id(),
+      gender: data.gender === 'female' ? 'female' : 'male',
+    };
 
-      this.#usersProvider
-        .edit(this.id(), user)
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          catchError((err) => {
-            console.log(err);
-            this.#messageService.showMessage(err.message, 'error');
-            this.#messageService.hideLoader();
+    this.#messageService.showLoader();
 
-            return EMPTY;
-          })
-        )
-        .subscribe(() => {
-          this.#messageService.showMessage(
-            "Nom d'utilisateur édité avec succès",
-            'success'
-          );
+    this.#usersProvider
+      .edit(this.id(), user)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((err) => {
+          console.log(err);
+          this.#messageService.showMessage(err.message, 'error');
           this.#messageService.hideLoader();
-          this.onSucessEdit();
-        });
-    }
+
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.#messageService.showMessage(
+          "Nom d'utilisateur édité avec succès",
+          'success'
+        );
+        this.#messageService.hideLoader();
+        this.onSucessEdit();
+      });
   }
 }

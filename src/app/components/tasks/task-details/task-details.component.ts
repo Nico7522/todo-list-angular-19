@@ -27,6 +27,7 @@ export class TaskDetailsComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #location = inject(Location);
   readonly id = input<string>('');
+  body = document.body;
   imgUrl = environment.IMG_URL;
   priorityColorClass = signal('');
   task$ = toObservable(this.id).pipe(
@@ -53,4 +54,12 @@ export class TaskDetailsComponent {
   }
 
   ngOnInit() {}
+
+  increaseSize = signal(false);
+  zoomPicture() {
+    this.increaseSize.set(!this.increaseSize());
+    this.increaseSize()
+      ? this.body.classList.add('overflow-hidden')
+      : this.body.classList.remove('overflow-hidden');
+  }
 }

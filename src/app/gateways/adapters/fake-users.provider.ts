@@ -89,6 +89,11 @@ export class FakeUsersProvider extends UsersProvider {
     let user: User = {
       id: uuidv4(),
       username: username,
+      email: 'johndoe@pmail.com',
+      name: 'John',
+      surname: 'Doe',
+      country: 'Belgium',
+      gender: 'male',
     };
 
     let currentList = this.users$.getValue();
