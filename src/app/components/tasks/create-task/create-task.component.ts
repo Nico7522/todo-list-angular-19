@@ -1,25 +1,17 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
 import { Task } from '../../../models/task.model';
 import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import {
-  BehaviorSubject,
-  catchError,
-  EMPTY,
-  filter,
-  map,
-  of,
-  startWith,
-  Subject,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { MessageService } from '../../../services/message.service';
 import { Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmationModalComponent } from '../../../shared/confirmation-modal/confirmation-modal.component';
 import { createTask } from '../../../helpers/functions';
 
@@ -39,7 +31,7 @@ export class CreateTaskComponent {
   readonly #tasksProvider = inject(FakeTasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
-  destroyRef = inject(DestroyRef);
+
   taskForm = this.#fb.group({});
   userId = this.#usersProvider.currentUser()?.id;
   formData = signal<FormData>(new FormData());

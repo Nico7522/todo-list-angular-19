@@ -14,7 +14,6 @@ import { Task } from '../../models/task.model';
 import { environment } from '../../../environments/environment.development';
 // @ts-ignore
 import Datepicker from 'flowbite-datepicker/Datepicker';
-import { returnDateToString } from '../../helpers/functions';
 
 @Component({
   selector: 'app-base-task-form',
@@ -41,7 +40,12 @@ export class BaseTaskFormComponent {
   get parentFormGroup(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
-
+  get titleInvalid() {
+    return (
+      this.parentFormGroup.get('base.title')?.invalid &&
+      this.parentFormGroup.get('base.title')?.touched
+    );
+  }
   ngOnInit() {
     const dateInput = document.getElementById('datepicker');
     if (dateInput) {
@@ -50,6 +54,7 @@ export class BaseTaskFormComponent {
         format: 'dd/mm/yyyy',
       });
     }
+
     this.parentFormGroup.addControl(
       this.controlKey,
       new FormGroup({

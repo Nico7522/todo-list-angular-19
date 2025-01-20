@@ -1,10 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 
 @Component({
   selector: 'app-nav',
-  imports: [RouterModule],
+  imports: [RouterModule, RouterLinkActive],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.scss',
 })

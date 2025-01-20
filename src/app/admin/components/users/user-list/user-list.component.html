@@ -1,6 +1,6 @@
 @defer (hydrate on interaction) {
 <div class="flex md:flex-row flex-col  items-center m-2 gap-2">
-    <button type="button" (click)="showCreateForm()"
+    <button (click)="scrollToBottom()" routerLink="/admin/users/create" type="button"
         class="px-2 py-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm   dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Ajouter
         un utilisateur</button>
     <input #searchInput
@@ -38,12 +38,12 @@
                 </td>
                 @defer (hydrate on interaction) {
                 <td class="px-6 py-4 text-sm">
-                    <button type="button" (click)="showDeleteConfirmation(user.id)"
+                    <button type="button" (click)="onShowDeleteConfirmationModal(user.id)"
                         class="focus:outline-none my-2 md:my-0 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm py-1 px-2 me-2  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Bannir</button>
-                    <button type="button" (click)="showDetails(user.id)"
+                    <button (click)="scrollToBottom()" routerLink="/admin/users/{{user.id}}/details"
                         class="text-white my-2 md:my-0 bg-default hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm py-1 px-2 me-2 ml-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Détails
                         et tâches</button>
-                    <button type="button" (click)="showEditForm(user.id)"
+                    <button (click)="scrollToBottom()" routerLink="/admin/users/{{user.id}}/edit"
                         class="text-white my-2 md:my-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm py-1 px-2 me-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Editer</button>
 
                 </td>
@@ -59,18 +59,13 @@
         Voir plus
     </button>
 </div>
-<section class="{{action().show ? 'opacity-100' : 'opacity-0'}}  transition ease-in-out duration-300">
-    @if (action().action === "details") {
-    <app-user-details [id]="action().id!" />
-    }
-    @if (action().action === "edit") {
-    <app-user-edit [id]="action().id!" (sucessEdit)="onSucessEdit()" />
-    }
-    @if (action().action === "delete") {
+<section class="{{showAnimation() ? 'opacity-100' : 'opacity-0'}}  transition ease-in-out  duration-300">
+    <router-outlet />
+</section>
+
+<div class="{{showDeleteConfirmationModal() ? 'opacity-100' : 'opacity-0'}}  transition ease-in-out  duration-300">
+    @if (showDeleteConfirmationModal()) {
     <app-confirmation-modal (confirm)="onConfirm()" (cancel)="onCancel()" />
     }
-    @if (action().action === "create") {
-    <app-create-user-modal (submit)="onSubmit($event)" (close)="onCancel()" />
-    }
 
-</section>
+</div>

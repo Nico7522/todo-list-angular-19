@@ -1,0 +1,64 @@
+<div class="flex flex-col items-center justify-center" [formGroupName]="controlKey">
+    <input formControlName="username"
+        class="surname md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+        placeholder="John Doe ...">
+    @if (usernameRequired) {
+    <span class="text-red-600 block text-center">Champ requis</span>
+    }
+    @if (usernameTaken) {
+    <span class="text-red-600 block text-center">Le nom d'utilisateur est déjà pris</span>
+    }
+
+    <fieldset class="border flex flex-col md:flex-row items-center justify-center gap-1 p-2 pb-7 mt-3">
+        <legend class="p-1 text-start">Nom et prénom</legend>
+        <div class="flex flex-col md:h-12 ">
+            <input formControlName="name"
+                class="bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md  px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+                placeholder="John ...">
+            @if (nameRequired) {
+            <span class="text-red-600 block text-center">Champ requis</span>
+            }
+
+        </div>
+        <div class="flex flex-col md:h-12 ">
+            <input formControlName="surname"
+                class=" bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md  px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+                placeholder="Doe ...">
+            @if (surnameRequired) {
+            <span class="text-red-600 block  text-center">Champ requis</span>
+            }
+
+        </div>
+    </fieldset>
+
+
+    <input formControlName="email"
+        class="md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
+        placeholder="johndoe@gmail.com ...">
+    @if (emailRequired) {
+    <span class="text-red-600 block text-center">Champ requis</span>
+    }
+
+    <div class="flex items-center justify-center gap-3 mt-5">
+        <div class="flex items-center">
+            <input formControlName="gender" id="male" type="radio" value="male" name="gender"
+                class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="male" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Homme</label>
+        </div>
+        <div class="flex items-center">
+            <input formControlName="gender" id="famale" type="radio" value="female" name="gender"
+                class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="famale" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Femme
+            </label>
+        </div>
+    </div>
+
+
+    <select formControlName="country" id="countries"
+        class="bg-gray-50 border md:w-96 mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        @for (country of countries; track country) {
+        <option [value]="country">{{country}}</option>
+        }
+    </select>
+
+</div>

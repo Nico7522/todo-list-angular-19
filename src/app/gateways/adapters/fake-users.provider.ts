@@ -4,8 +4,10 @@ import {
   map,
   Observable,
   of,
+  Subject,
   switchMap,
   take,
+  tap,
   throwError,
 } from 'rxjs';
 import { User } from '../../models/user.model';
@@ -19,9 +21,9 @@ import { v4 as uuidv4 } from 'uuid';
   providedIn: 'root',
 })
 export class FakeUsersProvider extends UsersProvider {
-  override createUserAdmin(username: string): Observable<boolean> {
-    let currentList = this.users$.getValue();
-    let existingUser = currentList.find((u) => u.username === username);
+  override createUserAdmin(user: User): Observable<boolean> {
+    let currentList = this.#users$.getValue();
+    let existingUser = currentList.find((u) => u.username === user.username);
     if (existingUser) {
       return throwError(() => {
         const error = new CustomError("L'utilisateur existe déjà", {
@@ -30,40 +32,40 @@ export class FakeUsersProvider extends UsersProvider {
         return error;
       });
     }
-    let user: User = {
-      id: uuidv4(),
-      username: username,
-    };
+
     let newList = [...currentList, user];
-    this.users$.next(newList);
+    this.#users$.next(newList);
     return of(true);
   }
   readonly #httpClient = inject(HttpClient);
-  users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
-
+  #users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  users$ = this.#users$.asObservable();
   override delete(id: string): Observable<boolean> {
-    return this.users$.pipe(
+    return this.#users$.pipe(
+      take(1),
       map((users) => {
         let user = users.find((u) => u.id === id);
+        console.log(user);
+
         if (!user)
           throw new CustomError("L'utilisateur n'a pas été trouvé", {
             status: 404,
           });
         let newUserList = users.filter((u) => u.id !== id);
-        this.users$.next(newUserList);
+        this.#users$.next(newUserList);
         return true;
       })
     );
   }
 
   override edit(id: string, user: User): Observable<boolean> {
-    return this.users$.pipe(
+    return this.#users$.pipe(
       take(1),
       map((users) => {
         let index = users.findIndex((u) => u.id === id);
         if (index !== -1) {
           users[index] = { ...users[index], ...user };
-          this.users$.next(users);
+          this.#users$.next(users);
           return true;
         }
         throw new CustomError("L'utilisateur n'a pas été trouvé", {
@@ -96,11 +98,11 @@ export class FakeUsersProvider extends UsersProvider {
       gender: 'male',
     };
 
-    let currentList = this.users$.getValue();
+    let currentList = this.#users$.getValue();
     let newList = [...currentList, user];
 
     if (currentList.length < newList.length) {
-      this.users$.next(newList);
+      this.#users$.next(newList);
       this.login(user);
       return of(true);
     }
@@ -114,15 +116,12 @@ export class FakeUsersProvider extends UsersProvider {
   }
   override getUserByUsername(username: string): Observable<User | null> {
     return this.users$.pipe(
-      map((users) => {
-        let user = users.find((u) => u.username === username);
-        return user ? user : null;
-      })
+      map((users) => users.find((u) => u.username === username) || null)
     );
   }
 
   override getUser(id: string): Observable<User | null> {
-    return this.users$.pipe(
+    return this.#users$.pipe(
       take(1),
       map((users) => {
         let user = users.find((u) => u.id === id);
@@ -162,7 +161,7 @@ export class FakeUsersProvider extends UsersProvider {
               userList.push(user);
             }
           );
-          this.users$.next(userList);
+          this.#users$.next(userList);
           return userList;
         }),
         catchError(() => {
@@ -180,7 +179,7 @@ export class FakeUsersProvider extends UsersProvider {
   }
 
   override getUsers(): Observable<User[]> {
-    return this.users$;
+    return this.#users$;
   }
 
   #role = signal<'admin' | 'user' | null>(null);

@@ -1,6 +1,6 @@
 <app-nav />
 @if (messages().length > 0) {
-<div class="absolute top-1 left-1/2 transform -translate-x-1/2 w-full">
+<div class="fixed top-1 left-1/2 transform -translate-x-1/2 w-full z-50">
     @for (msg of messages(); track $index) {
     <app-message [response]="msg.response" [message]="msg.message" />
 

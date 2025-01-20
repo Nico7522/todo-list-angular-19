@@ -1,30 +1,12 @@
-import {
-  Component,
-  DestroyRef,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { UserDetailsComponent } from '../../../../components/users/user-details/user-details.component';
-import { UserEditComponent } from '../../../../components/users/user-edit/user-edit.component';
 import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import {
-  catchError,
-  combineLatest,
-  EMPTY,
-  filter,
-  map,
-  Subject,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { catchError, EMPTY, map, Subject, switchMap, take, tap } from 'rxjs';
 import { MessageService } from '../../../../services/message.service';
-import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { log } from 'node:console';
 type Action = {
   show: boolean;
   id?: string;
@@ -33,13 +15,7 @@ type Action = {
 
 @Component({
   selector: 'app-user-list',
-  imports: [
-    AsyncPipe,
-    UserDetailsComponent,
-    UserEditComponent,
-    ConfirmationModalComponent,
-    CreateUserModalComponent,
-  ],
+  imports: [AsyncPipe, ConfirmationModalComponent, RouterOutlet, RouterModule],
 
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
@@ -48,7 +24,9 @@ export class UserListComponent {
   readonly #usersProvider = inject(FakeUsersProvider);
   readonly #destroyRef = inject(DestroyRef);
   readonly #messageService = inject(MessageService);
-
+  showAnimation = signal(false);
+  showDeleteConfirmationModal = signal(false);
+  userId = signal('');
   #limit = signal(25);
   pseudo = signal('');
   #subject$ = new Subject<void>();
@@ -59,12 +37,10 @@ export class UserListComponent {
       .pipe(
         take(1),
         tap((user) => {
-          if (user) this.showDetails(user.id);
-          else
-            this.#messageService.showMessage(
-              'Aucun utilisateur avec ce pseudo',
-              'error'
-            );
+          this.#messageService.showMessage(
+            'Aucun utilisateur avec ce pseudo',
+            'error'
+          );
         }),
         catchError(() => {
           return EMPTY;
@@ -81,79 +57,51 @@ export class UserListComponent {
     )
   );
 
-  action = signal<Action>({ show: false, id: '', action: 'details' });
-
+  scrollToBottom() {
+    setTimeout(() => {
+      window.scrollTo(
+        0,
+        window.document.body.scrollHeight - window.innerHeight
+      );
+      this.showAnimation.set(true);
+    }, 100);
+  }
   paginate() {
     this.#limit.update((prevLimit) => prevLimit + 25);
   }
 
-  showDetails(id: string) {
-    this.action.set({ show: true, id, action: 'details' });
+  onShowAnimation() {
+    this.showAnimation.set(true);
   }
-
-  showEditForm(id: string) {
-    this.action.set({ show: true, id, action: 'edit' });
-  }
-
-  onSucessEdit() {
-    this.action.set({ show: false, action: null });
-  }
-
-  showDeleteConfirmation(id: string) {
-    this.action.set({ show: true, id, action: 'delete' });
+  onShowDeleteConfirmationModal(id: string) {
+    this.userId.set(id);
+    this.showDeleteConfirmationModal.set(true);
   }
 
   onConfirm() {
     this.#messageService.showLoader();
-
     this.#usersProvider
-      .delete(this.action().id!)
+      .delete(this.userId())
       .pipe(
         takeUntilDestroyed(this.#destroyRef),
         catchError((err) => {
-          console.log('ici');
-
-          this.action.set({ show: false, action: null });
           this.#messageService.showMessage(err.message, 'error');
           this.#messageService.hideLoader();
+          this.showDeleteConfirmationModal.set(false);
 
           return EMPTY;
         })
       )
       .subscribe((_) => {
-        this.action.set({ show: false, action: null });
         this.#messageService.showMessage('Utilisateur supprimé', 'success');
         this.#messageService.hideLoader();
+        this.showDeleteConfirmationModal.set(false);
       });
   }
 
   onCancel() {
-    this.action.set({ show: false, action: null });
+    this.showDeleteConfirmationModal.set(false);
   }
 
-  showCreateForm() {
-    this.action.set({ show: true, action: 'create' });
-  }
-
-  onSubmit(username: string) {
-    this.#messageService.showLoader();
-
-    this.#usersProvider
-      .createUserAdmin(username)
-      .pipe(
-        takeUntilDestroyed(this.#destroyRef),
-        catchError((err) => {
-          this.action.set({ show: false, action: null });
-          this.#messageService.showMessage(err.message, 'error');
-          this.#messageService.hideLoader();
-
-          return EMPTY;
-        })
-      )
-      .subscribe((_) => {
-        this.action.set({ show: false, action: null });
-        this.#messageService.showMessage('Utilisateur crée', 'success');
-        this.#messageService.hideLoader();
-      });
-  }
+  // A mettre dans le create user
 }

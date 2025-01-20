@@ -3,6 +3,7 @@ import { FakeTasksProvider } from '../gateways/adapters/fake-tasks.provider';
 import { Task } from '../models/task.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from '../services/message.service';
+import { FormGroup } from '@angular/forms';
 
 export function getAssociatedImage(title: string) {
   let imgUrl = '';

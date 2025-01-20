@@ -1,70 +1,15 @@
+@if (user$ | async; as user) {
 <div class="text-center py-10 md:mx-20">
-    @if (user$ | async; as user) {
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <app-user-form [controlKey]="'base'" [user]="user" />
 
-    <h1 class="text-white text-xl">Informations</h1>
-    <form class="flex flex-col items-center justify-center" [formGroup]="editForm" (submit)="onSubmit()">
-        <input formControlName="username"
-            class="md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
-            placeholder="John Doe ...">
-        @if (this.editForm
-        .get('username')
-        ?.getError('required') &&
-        this.editForm.get('username')?.touched) {
-        <span class="text-red-600 block text-center">Champ requis</span>
-        }
-
-        <div class="flex flex-col md:flex-row items-center justify-center md:w-96 gap-1">
-            <input formControlName="name"
-                class="md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
-                placeholder="John ...">
-
-
-            <input formControlName="surname"
-                class="md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
-                placeholder="Doe ...">
-
-        </div>
-
-
-        <input formControlName="email"
-            class="md:w-96 bg-transparent placeholder:text-white placeholder:opacity-50 text-white text-sm border border-white rounded-md mt-5 px-3 py-2 transition duration-300 ease focus:outline-none focus:border-white hover:border-white shadow-sm focus:shadow"
-            placeholder="johndoe@gmail.com ...">
-        @if (this.editForm
-        .get('email')
-        ?.getError('required') &&
-        this.editForm.get('email')?.touched) {
-        <span class="text-red-600 block text-center">Champ requis</span>
-        }
-
-        <div class="flex items-center justify-center gap-3 mt-5">
-            <div class="flex items-center">
-                <input formControlName="gender" id="male" type="radio" value="male" name="gender"
-                    class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="male" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Homme</label>
-            </div>
-            <div class="flex items-center">
-                <input formControlName="gender" id="famale" type="radio" value="female" name="gender"
-                    class="w-4 h-4 text-purple-700 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="famale" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Femme
-                </label>
-            </div>
-        </div>
-
-
-        <!-- <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pays</label> -->
-        <select formControlName="country" id="countries"
-            class="bg-gray-50 border md:w-96 mt-5 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            @for (country of countries; track country) {
-            <option [value]="country">{{country}}</option>
-            }
-        </select>
-        <button [disabled]="!editForm.valid || !editForm.dirty"
+        <button [disabled]="!editForm.valid"
             class="mt-2 block m-auto rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-slate-800 transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="submit">
             Éditer
         </button>
     </form>
-    } @else {
-    <span class="text-red-700 text-2xl">Utilisateur non trouvé</span>
-    }
+
 </div>
+
+}

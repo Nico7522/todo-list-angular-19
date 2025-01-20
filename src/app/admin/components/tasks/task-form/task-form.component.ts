@@ -1,9 +1,23 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+} from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../../shared/base-task-form/base-task-form.component';
 import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
-import { catchError, EMPTY, Subject, take, tap } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  map,
+  Observable,
+  of,
+  Subject,
+  take,
+  tap,
+} from 'rxjs';
 import { FakeTasksProvider } from '../../../../gateways/adapters/fake-tasks.provider';
 import { Task } from '../../../../models/task.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
