@@ -1,10 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FilterComponent } from '../filter/filter.component';
 import { TaskComponent } from '../task/task.component';
 import { Router, RouterModule } from '@angular/router';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import {
   debounceTime,
@@ -12,6 +10,8 @@ import {
   shareReplay,
   switchMap,
 } from 'rxjs';
+import { UsersProvider } from '../../gateways/ports/users.provider';
+import { TasksProvider } from '../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-task-list',
@@ -20,8 +20,8 @@ import {
   styleUrl: './task-list.component.scss',
 })
 export class TaskListComponent {
-  readonly #tasksProvider = inject(FakeTasksProvider);
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
   readonly #router = inject(Router);
   role = this.#usersProvider.role;
   onHomePage = this.#router.url.includes('list');

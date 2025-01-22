@@ -16,6 +16,7 @@ export const images = [
 ];
 export const completed = [false, true];
 export const countries = [
+  'Choisissez un pays',
   'Canada',
   'United States',
   'Mexico',

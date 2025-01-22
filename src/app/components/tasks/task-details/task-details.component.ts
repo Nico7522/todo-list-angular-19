@@ -11,10 +11,10 @@ import {
   tap,
 } from 'rxjs';
 import { PriorityComponent } from '../../../shared/priority/priority.component';
-import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { environment } from '../../../../environments/environment.development';
 import { CheckDateFormatPipe } from '../../../pipes/check-date-format.pipe';
+import { UsersProvider } from '../../../gateways/ports/users.provider';
+import { TasksProvider } from '../../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-task-details',
@@ -23,8 +23,8 @@ import { CheckDateFormatPipe } from '../../../pipes/check-date-format.pipe';
   styleUrl: './task-details.component.scss',
 })
 export class TaskDetailsComponent {
-  readonly #tasksProvider = inject(FakeTasksProvider);
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
   readonly #location = inject(Location);
   readonly id = input<string>('');
   body = document.body;

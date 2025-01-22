@@ -39,6 +39,10 @@
     <span class="text-red-600 block text-center">Champ requis</span>
     }
 
+    @if (emailInvalid) {
+    <span class="text-red-600 block text-center">Email non valide</span>
+    }
+
     <div class="flex items-center justify-center gap-3 mt-5">
         <div class="flex items-center">
             <input formControlName="gender" id="male" type="radio" value="male" name="gender"
@@ -60,5 +64,4 @@
         <option [value]="country">{{country}}</option>
         }
     </select>
-
 </div>

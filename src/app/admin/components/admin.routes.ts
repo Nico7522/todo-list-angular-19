@@ -5,7 +5,7 @@ import { canQuitGuard } from '../../guards/can-quit.guard';
 import { EditTaskComponent } from './tasks/edit-task/edit-task.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { TaskListComponent } from '../../shared/task-list/task-list.component';
-import { CreateUserModalComponent } from './users/create-user-modal/create-user-modal.component';
+import { CreateUserComponent } from './users/create-user/create-user.component';
 import { UserEditComponent } from '../../components/users/user-edit/user-edit.component';
 import { UserDetailsComponent } from '../../components/users/user-details/user-details.component';
 
@@ -34,7 +34,7 @@ const ADMIN_ROUTES: Route[] = [
         children: [
           {
             path: 'create',
-            component: CreateUserModalComponent,
+            component: CreateUserComponent,
           },
           {
             path: ':id/edit',

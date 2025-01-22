@@ -1,19 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BaseTaskFormComponent } from '../../../shared/base-task-form/base-task-form.component';
 import { Task } from '../../../models/task.model';
-import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
-import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
 import { Subject, take } from 'rxjs';
 import { MessageService } from '../../../services/message.service';
 import { Router } from '@angular/router';
 import { ConfirmationModalComponent } from '../../../shared/confirmation-modal/confirmation-modal.component';
 import { createTask } from '../../../helpers/functions';
+import { UsersProvider } from '../../../gateways/ports/users.provider';
+import { TasksProvider } from '../../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-create-task',
@@ -27,8 +22,8 @@ import { createTask } from '../../../helpers/functions';
 })
 export class CreateTaskComponent {
   #fb = inject(FormBuilder).nonNullable;
-  readonly #usersProvider = inject(FakeUsersProvider);
-  readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
 

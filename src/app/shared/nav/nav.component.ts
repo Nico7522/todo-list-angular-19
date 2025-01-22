@@ -1,6 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLinkActive, RouterModule } from '@angular/router';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
+import { UsersProvider } from '../../gateways/ports/users.provider';
 
 @Component({
   selector: 'app-nav',
@@ -9,7 +9,7 @@ import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
   styleUrl: './nav.component.scss',
 })
 export class NavComponent {
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #usersProvider = inject(UsersProvider);
   readonly #router = inject(Router);
   currentUser = this.#usersProvider.currentUser;
   role = this.#usersProvider.role;

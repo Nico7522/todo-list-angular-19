@@ -1,37 +1,35 @@
-import { Component, DestroyRef, inject, output } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { UserFormComponent } from '../user-form/user-form.component';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BaseUserFormComponent } from '../../../../shared/base-user-form/base-user-form.component';
 import { User } from '../../../../models/user.model';
 import { MessageService } from '../../../../services/message.service';
-import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY } from 'rxjs';
-
+import { v4 as uuidv4 } from 'uuid';
+import { UsersProvider } from '../../../../gateways/ports/users.provider';
 @Component({
-  selector: 'app-create-user-modal',
-  imports: [ReactiveFormsModule, FormsModule, UserFormComponent],
+  selector: 'app-create-user',
+  imports: [ReactiveFormsModule, FormsModule, BaseUserFormComponent],
 
-  templateUrl: './create-user-modal.component.html',
-  styleUrl: './create-user-modal.component.scss',
+  templateUrl: './create-user.component.html',
+  styleUrl: './create-user.component.scss',
 })
-export class CreateUserModalComponent {
+export class CreateUserComponent {
   readonly #messageService = inject(MessageService);
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #usersProvider = inject(UsersProvider);
   readonly #destroyRef = inject(DestroyRef);
   form = new FormGroup({});
 
   onSubmit() {
     if (this.form.valid) {
       let data: User = this.form.get('base')?.value as unknown as User;
+      let newUser: User = {
+        ...data,
+        id: uuidv4(),
+      };
       this.#messageService.showLoader();
       this.#usersProvider
-        .createUserAdmin(data as User)
+        .createUser(newUser)
         .pipe(
           takeUntilDestroyed(this.#destroyRef),
           catchError((err) => {

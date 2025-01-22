@@ -1,17 +1,11 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, map, Subject, switchMap, take, tap } from 'rxjs';
+import { catchError, EMPTY, map, Subject, switchMap, take } from 'rxjs';
 import { MessageService } from '../../../../services/message.service';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { log } from 'node:console';
-type Action = {
-  show: boolean;
-  id?: string;
-  action: 'edit' | 'details' | 'create' | 'delete' | null;
-};
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { UsersProvider } from '../../../../gateways/ports/users.provider';
 
 @Component({
   selector: 'app-user-list',
@@ -21,9 +15,10 @@ type Action = {
   styleUrl: './user-list.component.scss',
 })
 export class UserListComponent {
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #usersProvider = inject(UsersProvider);
   readonly #destroyRef = inject(DestroyRef);
   readonly #messageService = inject(MessageService);
+  readonly #router = inject(Router);
   showAnimation = signal(false);
   showDeleteConfirmationModal = signal(false);
   userId = signal('');
@@ -31,22 +26,25 @@ export class UserListComponent {
   pseudo = signal('');
   #subject$ = new Subject<void>();
   filterByUsername(word: string) {
-    this.#subject$.next();
     this.#usersProvider
       .getUserByUsername(word)
       .pipe(
         take(1),
-        tap((user) => {
-          this.#messageService.showMessage(
-            'Aucun utilisateur avec ce pseudo',
-            'error'
-          );
-        }),
         catchError(() => {
           return EMPTY;
         })
       )
-      .subscribe();
+      .subscribe((user) => {
+        if (user) {
+          this.#router.navigate(['/admin', 'users', user?.id, 'details']);
+          this.scrollToBottom();
+        } else {
+          this.#messageService.showMessage(
+            'Aucun utilisateur avec ce pseudo',
+            'error'
+          );
+        }
+      });
   }
 
   users$ = toObservable(this.#limit).pipe(
@@ -102,6 +100,4 @@ export class UserListComponent {
   onCancel() {
     this.showDeleteConfirmationModal.set(false);
   }
-
-  // A mettre dans le create user
 }

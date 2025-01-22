@@ -1,0 +1,10 @@
+<div class="w-96 m-auto py-5 px-10">
+    <form [formGroup]="form" class="flex flex-col justify-center items-center" (ngSubmit)="onSubmit()">
+        <app-base-user-form controlKey="base" />
+        <button [disabled]="!this.form.valid"
+            class="mt-2 inline m-auto rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="submit">
+            Créer
+        </button>
+    </form>
+</div>

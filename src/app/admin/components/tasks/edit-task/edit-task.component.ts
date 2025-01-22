@@ -1,21 +1,16 @@
 import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, EMPTY, map, of, Subject, switchMap, take } from 'rxjs';
-import { Priority } from '../../../../enums/priority.enum';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Task } from '../../../../models/task.model';
-import { FakeTasksProvider } from '../../../../gateways/adapters/fake-tasks.provider';
 import { MessageService } from '../../../../services/message.service';
 import { Response } from '../../../../models/response.model';
 import { ConfirmationModalComponent } from '../../../../shared/confirmation-modal/confirmation-modal.component';
 import { Router } from '@angular/router';
 import { BaseTaskFormComponent } from '../../../../shared/base-task-form/base-task-form.component';
 import { AsyncPipe } from '@angular/common';
-import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.provider';
+import { UsersProvider } from '../../../../gateways/ports/users.provider';
+import { TasksProvider } from '../../../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-edit-task',
@@ -29,8 +24,8 @@ import { FakeUsersProvider } from '../../../../gateways/adapters/fake-users.prov
   styleUrl: './edit-task.component.scss',
 })
 export class EditTaskComponent {
-  readonly #tasksProvider = inject(FakeTasksProvider);
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
 
   readonly #formBuilder = inject(FormBuilder);
   readonly #messageService = inject(MessageService);

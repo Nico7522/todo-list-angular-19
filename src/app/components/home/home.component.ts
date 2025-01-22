@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Router, RouterModule } from '@angular/router';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { MessageService } from '../../services/message.service';
+import { UsersProvider } from '../../gateways/ports/users.provider';
+import { TasksProvider } from '../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +12,8 @@ import { MessageService } from '../../services/message.service';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  readonly #usersProvider = inject(FakeUsersProvider);
-  readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
   users = this.#usersProvider.getUsers();
@@ -34,12 +34,12 @@ export class HomeComponent {
   onStart() {
     this.#messageService.showLoader();
     this.#usersProvider
-      .getRandomUsers()
+      .getUsers()
       .pipe(
         switchMap((users) => {
-          return this.#tasksProvider.getRandomTasks().pipe(
-            switchMap((result) => {
-              return this.#usersProvider.createUser(this.username()).pipe(
+          return this.#tasksProvider.getTasks().pipe(
+            switchMap(() => {
+              return this.#usersProvider.initUser(this.username()).pipe(
                 tap((_) => {
                   this.#usersProvider.setShowMenu(true);
                   this.#router.navigate(['/task/list']);

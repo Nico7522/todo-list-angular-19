@@ -1,9 +1,9 @@
-import { Component, inject, linkedSignal, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Priority } from '../../enums/priority.enum';
 import { Datepicker } from 'flowbite-datepicker';
 import { FormsModule } from '@angular/forms';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { formateDate } from '../../helpers/functions';
+import { TasksProvider } from '../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-filter',
@@ -15,7 +15,7 @@ import { formateDate } from '../../helpers/functions';
   styleUrl: './filter.component.scss',
 })
 export class FilterComponent {
-  readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #tasksProvider = inject(TasksProvider);
 
   title = signal(this.#tasksProvider.filterSav().title);
   selectedStatus = signal<boolean | null>(

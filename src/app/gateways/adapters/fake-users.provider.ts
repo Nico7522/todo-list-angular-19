@@ -1,27 +1,14 @@
-import {
-  BehaviorSubject,
-  catchError,
-  map,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  take,
-  tap,
-  throwError,
-} from 'rxjs';
+import { BehaviorSubject, map, Observable, of, take, throwError } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UsersProvider } from '../ports/users.provider';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
-import { HttpClient } from '@angular/common/http';
 import { v4 as uuidv4 } from 'uuid';
+import { UserFactory } from '../../factories/user.factory';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class FakeUsersProvider extends UsersProvider {
-  override createUserAdmin(user: User): Observable<boolean> {
+  userFactory = inject(UserFactory);
+  override createUser(user: User): Observable<boolean> {
     let currentList = this.#users$.getValue();
     let existingUser = currentList.find((u) => u.username === user.username);
     if (existingUser) {
@@ -37,7 +24,6 @@ export class FakeUsersProvider extends UsersProvider {
     this.#users$.next(newList);
     return of(true);
   }
-  readonly #httpClient = inject(HttpClient);
   #users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   users$ = this.#users$.asObservable();
   override delete(id: string): Observable<boolean> {
@@ -45,7 +31,6 @@ export class FakeUsersProvider extends UsersProvider {
       take(1),
       map((users) => {
         let user = users.find((u) => u.id === id);
-        console.log(user);
 
         if (!user)
           throw new CustomError("L'utilisateur n'a pas été trouvé", {
@@ -87,7 +72,7 @@ export class FakeUsersProvider extends UsersProvider {
     this.#role.set(null);
     this.#showMenu.set(false);
   }
-  override createUser(username: string): Observable<boolean> {
+  override initUser(username: string): Observable<boolean> {
     let user: User = {
       id: uuidv4(),
       username: username,
@@ -125,60 +110,24 @@ export class FakeUsersProvider extends UsersProvider {
       take(1),
       map((users) => {
         let user = users.find((u) => u.id === id);
+
         if (user) return user;
         return null;
       })
     );
   }
 
-  override getRandomUsers(): Observable<User[]> {
-    let userList: User[] = [];
-
-    return this.#httpClient
-      .get<{ results: any[] }>(`https://randomuser.me/api/?results=100`)
-      .pipe(
-        take(1),
-        map((data) => {
-          data.results.map(
-            (u: {
-              login: { uuid: string; username: string };
-              email: string;
-              name: { first: string; last: string };
-              location: { country: string };
-              gender: 'female' | 'male';
-              picture: { medium: string };
-            }) => {
-              let user: User = {
-                id: u.login.uuid,
-                username: u.login.username,
-                email: u.email,
-                name: u.name.first,
-                surname: u.name.last,
-                country: u.location.country,
-                gender: u.gender,
-                picture: u.picture.medium,
-              };
-              userList.push(user);
-            }
-          );
-          this.#users$.next(userList);
-          return userList;
-        }),
-        catchError(() => {
-          return throwError(() => {
-            const error = new CustomError(
-              "Les utilisateurs n'ont pas pu être généré",
-              {
-                status: 400,
-              }
-            );
-            return error;
-          });
+  #isUserFetched = signal(false);
+  override getUsers(): Observable<User[]> {
+    if (!this.#isUserFetched()) {
+      return this.userFactory.getRandomUsers().pipe(
+        map((user) => {
+          this.#users$.next(user);
+          this.#isUserFetched.set(true);
+          return user;
         })
       );
-  }
-
-  override getUsers(): Observable<User[]> {
+    }
     return this.#users$;
   }
 

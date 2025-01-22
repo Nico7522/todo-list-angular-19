@@ -26,6 +26,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(BrowserAnimationsModule),
+    {
+      provide: UsersProvider,
+      useClass: FakeUsersProvider,
+    },
+    {
+      provide: TasksProvider,
+      useClass: FakeTasksProvider,
+    },
     provideHttpClient(withFetch()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),

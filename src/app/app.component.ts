@@ -3,9 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { NavComponent } from './shared/nav/nav.component';
 import { MessageComponent } from './shared/message/message.component';
 import { MessageService } from './services/message.service';
-import { initFlowbite } from 'flowbite';
 import { FlowbiteService } from './services/flowbite.service';
-import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +16,6 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 export class AppComponent {
   readonly #messageService = inject(MessageService);
   messages = this.#messageService.messages;
-  title = 'Todo Demo';
 
-  constructor(private flowbiteService: FlowbiteService) {}
+  constructor() {}
 }

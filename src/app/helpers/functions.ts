@@ -1,9 +1,7 @@
 import { catchError, EMPTY, map, Observable } from 'rxjs';
-import { FakeTasksProvider } from '../gateways/adapters/fake-tasks.provider';
 import { Task } from '../models/task.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MessageService } from '../services/message.service';
-import { FormGroup } from '@angular/forms';
+import { TasksProvider } from '../gateways/ports/tasks.provider';
 
 export function getAssociatedImage(title: string) {
   let imgUrl = '';
@@ -50,7 +48,7 @@ export function formateDate(date: string): Date {
 }
 
 export function createTask(
-  tasksProvider: FakeTasksProvider,
+  tasksProvider: TasksProvider,
   hasImage: boolean,
   task: Task,
   formData: FormData,

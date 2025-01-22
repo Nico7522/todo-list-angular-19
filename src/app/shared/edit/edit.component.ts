@@ -6,15 +6,15 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { FakeUsersProvider } from '../../gateways/adapters/fake-users.provider';
 import { Task } from '../../models/task.model';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationModalComponent } from '../../shared/confirmation-modal/confirmation-modal.component';
-import { FakeTasksProvider } from '../../gateways/adapters/fake-tasks.provider';
 import { catchError, EMPTY } from 'rxjs';
 import { Response } from '../../models/response.model';
 import { MessageService } from '../../services/message.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UsersProvider } from '../../gateways/ports/users.provider';
+import { TasksProvider } from '../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-edit',
@@ -23,8 +23,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './edit.component.scss',
 })
 export class EditComponent {
-  readonly #usersProvider = inject(FakeUsersProvider);
-  readonly #tasksProvider = inject(FakeTasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
   readonly #messageService = inject(MessageService);
   readonly #router = inject(Router);
   destroyRef = inject(DestroyRef);

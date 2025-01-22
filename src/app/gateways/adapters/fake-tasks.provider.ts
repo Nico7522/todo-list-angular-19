@@ -6,28 +6,23 @@ import {
   Observable,
   switchMap,
   take,
-  tap,
 } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksProvider } from '../ports/tasks.provider';
-import { completed, titles } from '../../services/data';
 import { inject, Injectable, signal } from '@angular/core';
 import { CustomError } from '../../models/custom-error.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
-import { Priority } from '../../enums/priority.enum';
-import {
-  generateRandomDate,
-  getAssociatedImage,
-} from '../../helpers/functions';
 import { Filter } from '../../models/filter.model';
-import { FakeUsersProvider } from './fake-users.provider';
+import { UsersProvider } from '../ports/users.provider';
+import { TaskFactory } from '../../factories/task.factory';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FakeTasksProvider extends TasksProvider {
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #usersProvider = inject(UsersProvider);
+  readonly #taskFactory = inject(TaskFactory);
   totalLength = signal(0);
   #filterSav = signal<Filter>({
     title: '',
@@ -239,35 +234,21 @@ export class FakeTasksProvider extends TasksProvider {
   }
   #taskList$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
   taskList$ = this.#taskList$.asObservable();
-  getRandomTasks(): Observable<boolean> {
-    let todos: Task[] = [];
-    let i = 0;
-    while (i < 100) {
-      let todo: Task = {
-        title: titles[Math.floor(Math.random() * titles.length)],
-        priority: Math.floor(Math.random() * 3),
-        userId: null,
-        id: i,
-        completed: completed[Math.floor(Math.random() * completed.length)],
-        creationDate: generateRandomDate(),
-      };
-      todo.imgUrl = getAssociatedImage(todo.title);
-      if (todo.completed) {
-        todo.closingDate = new Date();
-      }
-      todos.push(todo);
-      i++;
-    }
-    return this.#usersProvider.getUsers().pipe(
-      take(1),
-      map((users) => {
-        todos = todos.map((task) => {
-          task.userId = users[Math.floor(Math.random() * users.length)].id;
-          this.#taskList$.next(todos);
-          return task;
-        });
+  getTasks(): Observable<Task[]> {
+    return this.#taskFactory.getRandomTasks().pipe(
+      switchMap((todos) => {
+        return this.#usersProvider.getUsers().pipe(
+          take(1),
+          map((users) => {
+            todos = todos.map((task) => {
+              task.userId = users[Math.floor(Math.random() * users.length)].id;
 
-        return true;
+              return task;
+            });
+            this.#taskList$.next(todos);
+            return todos;
+          })
+        );
       })
     );
   }

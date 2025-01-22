@@ -1,9 +1,14 @@
 import { Observable } from 'rxjs';
 import { Task } from '../../models/task.model';
-import { Priority } from '../../enums/priority.enum';
+import { Signal } from '@angular/core';
+import { Filter } from '../../models/filter.model';
 
 export abstract class TasksProvider {
-  abstract getRandomTasks(): Observable<boolean>;
+  abstract filterSav: Signal<Filter>;
+  abstract updateFilter(data: Partial<Filter>): void;
+  abstract resetFilter(): void;
+  abstract paginate(): void;
+  abstract getTasks(): Observable<Task[]>;
   abstract getTask(id: string): Observable<Task>;
   abstract getTasksByUserId(id: string): Observable<Task[]>;
   abstract delete(id: number): Observable<boolean>;

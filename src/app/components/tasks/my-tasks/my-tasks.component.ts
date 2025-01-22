@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { FakeTasksProvider } from '../../../gateways/adapters/fake-tasks.provider';
-import { FakeUsersProvider } from '../../../gateways/adapters/fake-users.provider';
 import { AsyncPipe } from '@angular/common';
 import { TaskComponent } from '../../../shared/task/task.component';
-import { tap } from 'rxjs';
+import { UsersProvider } from '../../../gateways/ports/users.provider';
+import { TasksProvider } from '../../../gateways/ports/tasks.provider';
 
 @Component({
   selector: 'app-my-tasks',
@@ -12,8 +11,8 @@ import { tap } from 'rxjs';
   styleUrl: './my-tasks.component.scss',
 })
 export class MyTasksComponent {
-  readonly #tasksProvider = inject(FakeTasksProvider);
-  readonly #usersProvider = inject(FakeUsersProvider);
+  readonly #tasksProvider = inject(TasksProvider);
+  readonly #usersProvider = inject(UsersProvider);
 
   currentUser = this.#usersProvider.currentUser;
   tasks$ = this.#tasksProvider.getTasksByUserId(this.currentUser()?.id || '');

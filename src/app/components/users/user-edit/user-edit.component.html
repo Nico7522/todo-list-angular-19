@@ -1,8 +1,7 @@
 @if (user$ | async; as user) {
 <div class="text-center py-10 md:mx-20">
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-        <app-user-form [controlKey]="'base'" [user]="user" />
-
+        <app-base-user-form [controlKey]="'base'" [user]="user" />
         <button [disabled]="!editForm.valid"
             class="mt-2 block m-auto rounded-md bg-green-600 py-2 px-4 border border-transparent text-center text-sm text-slate-800 transition-all shadow-md hover:shadow-lg focus:bg-green-700 focus:shadow-none active:bg-green-700 hover:bg-green-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="submit">
